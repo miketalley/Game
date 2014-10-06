@@ -1,0 +1,17 @@
+body {
+	overflow: hidden;
+}
+
+.main {
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+/*#player {
+	position: absolute;
+	background: url("../content/alex.jpg") no-repeat;
+	width: 33px;
+	height: 65px;
+	border: 1px solid red;
+}*/
