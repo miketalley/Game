@@ -7,6 +7,8 @@ $(document).ready(function(){
 	$('body').attr("background", background);
 	var backgroundXPos = 0;
 	var backgroundYPos = 0;
+	var defaultMoveDistance = 8;
+	var defaultDiagonalMoveDistance = 6;
 	var keys = [];
 
 	var canvas = new fabric.Canvas("c", { height: canvasHeight, width: canvasWidth});
@@ -20,8 +22,12 @@ $(document).ready(function(){
 		p1.faceCursor();
 		canvas.renderAll();
 	});
-	$(document).on('click', function(e){
+	$(document).on('contextmenu', function(e){
+		e.preventDefault();
 		p1.swingSword();
+	});
+	$(document).on('click', function(e){
+		p1.shootGun();
 	});
 	$(window).on('keydown', handleKeyDown);
 	$(window).on('keyup', handleKeyUp);
@@ -33,34 +39,82 @@ $(document).ready(function(){
 		checkKeys();
 	};
 
-	function checkKeys(){
-		if(keys["87"] || keys["38"]){
-			// Up
-			p1.moveUp();
-		}
-		else if(key === 83 || key === 40 ){
-			// Down
-			p1.moveDown();
-		}
-		else if(key === 65 || key === 37 ){
-			// Left
-			p1.moveLeft();
-		}
-		else if(key === 68 || key === 39 ){
-			// Right
-			p1.moveRight();
-		}
-	};
-
 	function handleKeyUp(e){
 		var e = e || event;
 		var key = e.keyCode;
 		keys[key] = false;
-	}
+	};
+
+	function checkKeys(){
+		var button = {
+			up: keys["87"] || keys["38"],
+			down: keys["83"] || keys["40"],
+			left: keys["65"] || keys["37"],
+			right: keys["68"] || keys["39"]
+		}
+
+		if( button.up && button.left ){
+			p1.moveUpAndLeft();
+		}
+		else if( button.up && button.right ){
+			p1.moveUpAndRight();
+		}
+		else if( button.down && button.left ){
+			p1.moveDownAndLeft();
+		}
+		else if( button.down && button.right ){
+			p1.moveDownAndRight();
+		}
+		else if( button.up ){
+			if( button.left ){
+				p1.moveUpAndLeft();
+			}
+			else if( button.right){
+				p1.moveUpAndRight();
+			}
+			else{
+				p1.moveUp();
+			}
+		}
+		else if( button.down ){
+			if( button.left ){
+				p1.moveDownAndLeft();
+			}
+			else if( button.right){
+				p1.moveDownAndRight();
+			}
+			else{
+				p1.moveDown();
+			}
+		}
+		else if( button.left ){
+			if( button.up ){
+				p1.moveUpAndLeft();
+			}
+			else if( button.down){
+				p1.moveDownAndLeft();
+			}
+			else{
+				p1.moveLeft();
+			}
+		}
+		else if( button.right ){
+			if( button.up ){
+				p1.moveUpAndRight();
+			}
+			else if( button.down){
+				p1.moveDownAndRight();
+			}
+			else{
+				p1.moveRight(10);
+			}
+		}
+		console.log('Left: ', button.left, ' Right: ', button.right, ' Up: ', button.up, ' Down: ', button.down);
+	};
 
 	function Player(){
 		var torsoDefaults = {
-			fill: 'red',
+			fill: 'blue',
 			width: 40,
 			height: 20,
 			originX: "center",
@@ -86,8 +140,34 @@ $(document).ready(function(){
 			angle: 0
 		};
 
+		var bladeDefaults = {
+			fill: 'silver',
+			width: 8,
+			height: 40,
+			left: -17,
+			top: 32,
+			originX: "center",
+			originY: "center",
+			strokeWidth: 5,
+			stroke: 'rgba(100,200,200,0.5)'
+		};
+
+		var gunDefaults = {
+			fill: 'black',
+			width: 8,
+			height: 15,
+			left: -17,
+			top: 18,
+			originX: "center",
+			originY: "center",
+			strokeWidth: 5,
+			stroke: 'rgba(100,200,200,0.5)'
+		};
+
 		this.torso = new fabric.Rect(torsoDefaults);
 		this.head = new fabric.Circle(headDefaults);
+		this.blade = new fabric.Rect(bladeDefaults);
+		this.gun = new fabric.Rect(gunDefaults);
 		this.el = this.el || new fabric.Group([this.torso, this.head], groupDefaults);
 		
 		this.faceCursor = function(){
@@ -142,48 +222,102 @@ $(document).ready(function(){
 		};
 
 		this.swingSword = function(){
-			var swordGroup, blade, hilt, point;
+			// var swordGroup, blade, hilt, point;
 
-			var blade = new fabric.Rect({
-				fill: 'silver',
-				width: 8,
-				height: 40,
-				left: -17,
-				top: 32,
-				originX: "center",
-				originY: "center",
-				strokeWidth: 5,
-				stroke: 'rgba(100,200,200,0.5)'
-			});
-
+			if(this.el.contains(this.gun)){
+				this.el.remove(this.gun);
+			}
 			// swordGroup = new fabric.Group([blade, hilt, point]);
-			this.el.add(blade);
-			var that = this;
-			setTimeout(function(){
-				that.el.remove(blade);
-				canvas.renderAll();
-			}, 200);
+			if(!this.el.contains(this.blade)){
+				this.el.add(this.blade);
+				var that = this;
+				setTimeout(function(){
+					that.el.remove(that.blade);
+					canvas.renderAll();
+				}, 200);
+			}
 		};
 
-		this.moveUp = function(){
-			backgroundYPos += 5;
+		this.shootGun = function(){
+			// gunGroup = new fabric.Group([blade, hilt, point]);
+			if(!this.el.contains(this.gun)){
+				this.el.add(this.gun);
+			}
+			this.fireBullet();
+		};
+
+		this.fireBullet = function(){
+			var bulletDefaults = {
+				radius: 50,
+				fill: "white",
+				left: this.el._originalLeft + -17,
+				top: this.el._originalTop + 29
+			};
+
+			// Spawn new bullet
+			var bullet = new fabric.Circle(bulletDefaults);
+
+			var elAngle = this.el.get('angle');
+			console.log(elAngle);
+			
+			canvas.add(bullet);
+			canvas.renderAll();
+			debugger;
+			// Move bullet on trajectory that gun was pointing
+		}
+
+		this.moveUpAndLeft = function(distance){
+			console.log('Up and Left');
+			backgroundXPos += distance || defaultDiagonalMoveDistance;
+			backgroundYPos += distance || defaultDiagonalMoveDistance;
 			bgUpdate();
 		};
 
-		this.moveDown = function(){
-			backgroundYPos -= 5;
+		this.moveUpAndRight = function(distance){
+			console.log('Up and Right');
+			backgroundXPos -= distance || defaultDiagonalMoveDistance;
+			backgroundYPos += distance || defaultDiagonalMoveDistance;
 			bgUpdate();
 		};
 
-		this.moveLeft = function(){
-			backgroundXPos += 5;
+		this.moveDownAndLeft = function(distance){
+			console.log('Down and Left');
+			backgroundXPos += distance || defaultDiagonalMoveDistance;
+			backgroundYPos -= distance || defaultDiagonalMoveDistance;
 			bgUpdate();
 		};
 
-		this.moveRight = function(){
-			backgroundXPos -= 5;
+		this.moveDownAndRight = function(distance){
+			console.log('Down and Right');
+			backgroundXPos -= distance || defaultDiagonalMoveDistance;
+			backgroundYPos -= distance || defaultDiagonalMoveDistance;
 			bgUpdate();
 		};
+
+		this.moveUp = function(distance){
+			console.log('Up');
+			backgroundYPos += distance || defaultMoveDistance;
+			bgUpdate();
+		};
+
+		this.moveDown = function(distance){
+			console.log('Down');
+			backgroundYPos -= distance || defaultMoveDistance;
+			bgUpdate();
+		};
+
+		this.moveLeft = function(distance){
+			console.log('Left');
+			backgroundXPos += distance || defaultMoveDistance;
+			bgUpdate();
+		};
+
+		this.moveRight = function(distance){
+			console.log('Right');
+			backgroundXPos -= distance || defaultMoveDistance;
+			bgUpdate();
+		};
+
 	};
 
 	function bgUpdate(){
