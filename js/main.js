@@ -113,6 +113,9 @@ $(document).ready(function(){
 	};
 
 	function Player(){
+		this.xPos = 100;
+		this.yPos = 100;
+
 		var torsoDefaults = {
 			fill: 'blue',
 			width: 40,
@@ -246,98 +249,163 @@ $(document).ready(function(){
 		};	
 
 		this.moveUpAndLeft = function(distance){
-			console.log('Up and Left');
-			backgroundXPos += distance || defaultDiagonalMoveDistance;
-			backgroundYPos += distance || defaultDiagonalMoveDistance;
-			bgUpdate();
+			this.xPos -= distance || defaultDiagonalMoveDistance;
+			this.yPos -= distance || defaultDiagonalMoveDistance;
+			movePlayer();
 		};
 
 		this.moveUpAndRight = function(distance){
-			console.log('Up and Right');
-			backgroundXPos -= distance || defaultDiagonalMoveDistance;
-			backgroundYPos += distance || defaultDiagonalMoveDistance;
-			bgUpdate();
+			this.xPos += distance || defaultDiagonalMoveDistance;
+			this.yPos -= distance || defaultDiagonalMoveDistance;
+			movePlayer();
 		};
 
 		this.moveDownAndLeft = function(distance){
-			console.log('Down and Left');
-			backgroundXPos += distance || defaultDiagonalMoveDistance;
-			backgroundYPos -= distance || defaultDiagonalMoveDistance;
-			bgUpdate();
+			this.xPos -= distance || defaultDiagonalMoveDistance;
+			this.yPos += distance || defaultDiagonalMoveDistance;
+			movePlayer();
 		};
 
 		this.moveDownAndRight = function(distance){
-			console.log('Down and Right');
-			backgroundXPos -= distance || defaultDiagonalMoveDistance;
-			backgroundYPos -= distance || defaultDiagonalMoveDistance;
-			bgUpdate();
+			this.xPos += distance || defaultDiagonalMoveDistance;
+			this.yPos += distance || defaultDiagonalMoveDistance;
+			movePlayer();
 		};
 
 		this.moveUp = function(distance){
-			console.log('Up');
-			backgroundYPos += distance || defaultMoveDistance;
-			bgUpdate();
+			this.yPos -= distance || defaultMoveDistance;
+			movePlayer();
 		};
 
 		this.moveDown = function(distance){
-			console.log('Down');
-			backgroundYPos -= distance || defaultMoveDistance;
-			bgUpdate();
+			this.yPos += distance || defaultMoveDistance;
+			movePlayer();
 		};
 
 		this.moveLeft = function(distance){
-			console.log('Left');
-			backgroundXPos += distance || defaultMoveDistance;
-			bgUpdate();
+			this.xPos -= distance || defaultMoveDistance;
+			movePlayer();
 		};
 
 		this.moveRight = function(distance){
-			console.log('Right');
-			backgroundXPos -= distance || defaultMoveDistance;
-			bgUpdate();
+			this.xPos += distance || defaultMoveDistance;
+			movePlayer();
 		};
 
 	};
 
 	function bullet(clickEvent, player, bulletType){
 		var angle = degToRad(player.el.angle + 90);
+		var bulletSettings, yOffset, xOffset, slope;
 		var bulletDefaults = {
-				radius: 2,
+				radius: 3,
 				fill: "white",
 				left: player.el._originalLeft + (32 * Math.cos(angle)),
 				top: player.el._originalTop + (32 * Math.sin(angle)),
-				originX: player.el._originalLeft + (32 * Math.cos(angle)),
-				originY: player.el._originalTop + (32 * Math.sin(angle))
+				originX: 'center',
+				originY: 'center'
 			};
-		var slug = new fabric.Circle(bulletDefaults);
 
-		console.log(slug);
-		fire(slug);
-		move(slug);
-		checkBounds(slug);
+		// Set up view elements
+		if(bulletType){
+			// Add various bulletSettings attributes here
+		}
+		var slug = new fabric.Circle(bulletSettings || bulletDefaults);
 
-		function fire(slug){
+		// Run calculations on bullet trajectory
+		if(player.el.angle !== 90 && player.el.angle !== 180){
+			slope = Math.tan(angle);
+		}
+		calculateSlopeOffsets();
+
+		// Main bullet calls
+		fire();
+		var moveIntervalID = setInterval(move, 10);
+
+		function fire(){
 			canvas.add(slug);
+		};
+
+		function move(){
+			var moveDistance = 5;
+			var counter = 0;
+
+			slug.top = slug.top + yOffset;
+			slug.left = slug.left + xOffset;
+
+			counter += 1;
+			if(counter > 100){
+				clearInterval(moveIntervalID);
+			}
 			canvas.renderAll();
 		};
 
-		function move(bullet, angle, clickEvent){
-			// TODO -- find elAngle based on quadrant
-			// use tan(elAngle) to get slope of the bullets line
-			// var tangentSlope = Math.tan(angle);
-			// console.log(angle, tangentSlope);
-		};
-
-		function checkBounds(slug){
+		function inBounds(){
 			// While bullet not out of visual area
 			// TODO -- insert logic for checking if 
 			// bullet is still visible
 			// remove bullet when off screen
+			return true;
+		};
+
+		function calculateSlopeOffsets(){
+			var x1 = clickEvent.clientX;
+			var y1 = clickEvent.clientY;
+			var x = slug.left;
+			var y = slug.top;
+
+			if(slope !== 0){
+				if(x1 > x && y1 > y){
+					// Down and right
+					xOffset = 3;
+					yOffset = 3;
+
+
+				}
+				else if(x1 > x && y1 < y){
+					// Up and right
+					xOffset = 3;
+					yOffset = -3;
+				}
+				else if(x1 < x && y1 > y){
+					// Down and left
+					xOffset = -3;
+					yOffset = 3;
+				}
+				else if(x1 < x && y1 < y){
+					// Down and right
+					xOffset = -3;
+					yOffset = -3;
+				}
+			}
+			else if(slope && slope == 0){
+				if(x1 > x){
+					xOffset = 3;
+					yOffset = 0;
+				}
+				else{
+					xOffset = -3;
+					yOffset = 0;
+				}
+			}
+			else{
+				if(y1 > y){
+					xOffset = 0;
+					yOffset = 3;
+				}
+				else{
+					xOffset = 0;
+					yOffset = -3;
+				}
+			}
 		};
 	};
 
-	function bgUpdate(){
-		$('body').css("background-position", backgroundXPos.toString() + "px " + backgroundYPos.toString() + "px");
+	function movePlayer(){
+		// $('body').css("background-position", backgroundXPos.toString() + "px " + backgroundYPos.toString() + "px");
+		p1.el.left = p1.xPos;
+		p1.el.top = p1.yPos;
+		canvas.renderAll();
 	};
 
 	function drawSprites(){
