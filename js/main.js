@@ -27,7 +27,7 @@ $(document).ready(function(){
 		p1.swingSword();
 	});
 	$(document).on('click', function(e){
-		p1.shootGun();
+		p1.shootGun(e);
 	});
 	$(window).on('keydown', handleKeyDown);
 	$(window).on('keyup', handleKeyUp);
@@ -238,33 +238,12 @@ $(document).ready(function(){
 			}
 		};
 
-		this.shootGun = function(){
-			// gunGroup = new fabric.Group([blade, hilt, point]);
+		this.shootGun = function(clickEvent){
 			if(!this.el.contains(this.gun)){
 				this.el.add(this.gun);
 			}
-			this.fireBullet();
-		};
-
-		this.fireBullet = function(){
-			var bulletDefaults = {
-				radius: 50,
-				fill: "white",
-				left: this.el._originalLeft + -17,
-				top: this.el._originalTop + 29
-			};
-
-			// Spawn new bullet
-			var bullet = new fabric.Circle(bulletDefaults);
-
-			var elAngle = this.el.get('angle');
-			console.log(elAngle);
-			
-			canvas.add(bullet);
-			canvas.renderAll();
-			debugger;
-			// Move bullet on trajectory that gun was pointing
-		}
+			var slug = new bullet(clickEvent, this);
+		};	
 
 		this.moveUpAndLeft = function(distance){
 			console.log('Up and Left');
@@ -320,10 +299,53 @@ $(document).ready(function(){
 
 	};
 
+	function bullet(clickEvent, player, bulletType){
+		var angle = degToRad(player.el.angle + 90);
+		var bulletDefaults = {
+				radius: 2,
+				fill: "white",
+				left: player.el._originalLeft + (32 * Math.cos(angle)),
+				top: player.el._originalTop + (32 * Math.sin(angle)),
+				originX: player.el._originalLeft + (32 * Math.cos(angle)),
+				originY: player.el._originalTop + (32 * Math.sin(angle))
+			};
+		var slug = new fabric.Circle(bulletDefaults);
+
+		console.log(slug);
+		fire(slug);
+		move(slug);
+		checkBounds(slug);
+
+		function fire(slug){
+			canvas.add(slug);
+			canvas.renderAll();
+		};
+
+		function move(bullet, angle, clickEvent){
+			// TODO -- find elAngle based on quadrant
+			// use tan(elAngle) to get slope of the bullets line
+			// var tangentSlope = Math.tan(angle);
+			// console.log(angle, tangentSlope);
+		};
+
+		function checkBounds(slug){
+			// While bullet not out of visual area
+			// TODO -- insert logic for checking if 
+			// bullet is still visible
+			// remove bullet when off screen
+		};
+	};
+
 	function bgUpdate(){
 		$('body').css("background-position", backgroundXPos.toString() + "px " + backgroundYPos.toString() + "px");
 	};
 
+	function drawSprites(){
+		for(x in playerSprites){
+			canvas.add(playerSprites[x].el);
+		}
+	};
+	
 	function calculateAngle(opposite, adjacent, baseAngle){
 		opposite = Math.abs(opposite);
 		adjacent = Math.abs(adjacent);
@@ -334,11 +356,14 @@ $(document).ready(function(){
 		return x + baseAngle;
 	};
 
-	function drawSprites(){
-		for(x in playerSprites){
-			canvas.add(playerSprites[x].el);
-		}
+	function degToRad(degrees){
+		return degrees * Math.PI / 180;
 	};
+
+	function radToDeg(radians){
+		return radians * 180 / Math.PI;
+	};
+
 });
 
 // var player1, player2;
