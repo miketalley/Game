@@ -3,9 +3,11 @@ body {
 }
 
 .main {
+	width: 800px;
+	height: 600px;
 	padding: 0;
 	margin: 0;
-	border: 0;
+	border: 1px solid black;
 }
 
 /*#player {

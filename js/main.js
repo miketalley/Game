@@ -1,15 +1,21 @@
 $(document).ready(function(){
-	var canvasWidth = $(window).innerWidth();
-	var canvasHeight = $(window).innerHeight();
+	var canvasWidth = 800;
+	var canvasHeight = 600;
+	// var canvasWidth = $(window).innerWidth();
+	// var canvasHeight = $(window).innerHeight();
 	var mouseX, mouseY;
 	var playerSprites = [];
 	var background = "./content/grass.jpg";
-	$('body').attr("background", background);
+	$('.main').attr("background", background);
 	var backgroundXPos = 0;
 	var backgroundYPos = 0;
-	var defaultMoveDistance = 8;
-	var defaultDiagonalMoveDistance = 6;
+	var defaultMoveDistance = 5;
+	var defaultDiagonalMoveDistance = defaultMoveDistance * 0.57;
 	var keys = [];
+	var minY = 9;
+	var minX = 9;
+	var maxY = 591;
+	var maxX = 791;
 
 	var canvas = new fabric.Canvas("c", { height: canvasHeight, width: canvasWidth});
 
@@ -20,6 +26,7 @@ $(document).ready(function(){
 		mouseX = e.clientX;
 		mouseY = e.clientY;
 		p1.faceCursor();
+
 		canvas.renderAll();
 	});
 	$(document).on('contextmenu', function(e){
@@ -32,11 +39,12 @@ $(document).ready(function(){
 	$(window).on('keydown', handleKeyDown);
 	$(window).on('keyup', handleKeyUp);
 
+	var checkKeysID = setInterval(checkKeys, 25);
+
 	function handleKeyDown(e){
 		var e = e || event;
 		var key = e.keyCode;
 		keys[key] = true;
-		checkKeys();
 	};
 
 	function handleKeyUp(e){
@@ -66,48 +74,16 @@ $(document).ready(function(){
 			p1.moveDownAndRight();
 		}
 		else if( button.up ){
-			if( button.left ){
-				p1.moveUpAndLeft();
-			}
-			else if( button.right){
-				p1.moveUpAndRight();
-			}
-			else{
-				p1.moveUp();
-			}
+			p1.moveUp();
 		}
 		else if( button.down ){
-			if( button.left ){
-				p1.moveDownAndLeft();
-			}
-			else if( button.right){
-				p1.moveDownAndRight();
-			}
-			else{
-				p1.moveDown();
-			}
+			p1.moveDown();
 		}
 		else if( button.left ){
-			if( button.up ){
-				p1.moveUpAndLeft();
-			}
-			else if( button.down){
-				p1.moveDownAndLeft();
-			}
-			else{
-				p1.moveLeft();
-			}
+			p1.moveLeft();
 		}
 		else if( button.right ){
-			if( button.up ){
-				p1.moveUpAndRight();
-			}
-			else if( button.down){
-				p1.moveDownAndRight();
-			}
-			else{
-				p1.moveRight(10);
-			}
+			p1.moveRight();
 		}
 		console.log('Left: ', button.left, ' Right: ', button.right, ' Up: ', button.up, ' Down: ', button.down);
 	};
@@ -118,20 +94,20 @@ $(document).ready(function(){
 
 		var torsoDefaults = {
 			fill: 'blue',
-			width: 40,
-			height: 20,
+			width: 15,
+			height: 6,
 			originX: "center",
 			originY: "center",
-			strokeWidth: 5,
+			strokeWidth: 1,
 			stroke: 'rgba(100,200,200,0.5)'
 		};
 
 		var headDefaults = {
-			radius: 14,
+			radius: 5,
 			fill: "orange",
 			originX: "center",
 			originY: "center",
-			strokeWidth: 5,
+			strokeWidth: 1,
 			stroke: 'rgba(100,200,200,0.5)'
 		};
 
@@ -145,25 +121,25 @@ $(document).ready(function(){
 
 		var bladeDefaults = {
 			fill: 'silver',
-			width: 8,
-			height: 40,
-			left: -17,
-			top: 32,
+			width: 2,
+			height: 16,
+			left: -6,
+			top: 12,
 			originX: "center",
 			originY: "center",
-			strokeWidth: 5,
+			strokeWidth: 1,
 			stroke: 'rgba(100,200,200,0.5)'
 		};
 
 		var gunDefaults = {
 			fill: 'black',
-			width: 8,
-			height: 15,
-			left: -17,
-			top: 18,
+			width: 2,
+			height: 5,
+			left: -6,
+			top: 6,
 			originX: "center",
 			originY: "center",
-			strokeWidth: 5,
+			strokeWidth: 1,
 			stroke: 'rgba(100,200,200,0.5)'
 		};
 
@@ -249,59 +225,98 @@ $(document).ready(function(){
 		};	
 
 		this.moveUpAndLeft = function(distance){
-			this.xPos -= distance || defaultDiagonalMoveDistance;
-			this.yPos -= distance || defaultDiagonalMoveDistance;
-			movePlayer();
+			if(this.yPos > minY && this.xPos > minX){
+				this.xPos -= distance || defaultDiagonalMoveDistance;
+				this.yPos -= distance || defaultDiagonalMoveDistance;
+				movePlayer();
+			}
+			else if(this.yPos > minY){
+				this.moveUp();
+			}
+			else if(this.xPos > minX){
+				this.moveLeft();
+			}
 		};
 
 		this.moveUpAndRight = function(distance){
-			this.xPos += distance || defaultDiagonalMoveDistance;
-			this.yPos -= distance || defaultDiagonalMoveDistance;
-			movePlayer();
+			if(this.yPos > minY && this.xPos < maxX){
+				this.xPos += distance || defaultDiagonalMoveDistance;
+				this.yPos -= distance || defaultDiagonalMoveDistance;
+				movePlayer();
+			}
+			else if(this.yPos > minY){
+				this.moveUp();
+			}
+			else if(this.xPos < maxX){
+				this.moveRight();
+			}
 		};
 
 		this.moveDownAndLeft = function(distance){
-			this.xPos -= distance || defaultDiagonalMoveDistance;
-			this.yPos += distance || defaultDiagonalMoveDistance;
-			movePlayer();
+			if(this.yPos < maxY && this.xPos > minX){
+				this.xPos -= distance || defaultDiagonalMoveDistance;
+				this.yPos += distance || defaultDiagonalMoveDistance;
+				movePlayer();
+			}
+			else if(this.yPos < maxY){
+				this.moveDown();
+			}
+			else if(this.xPos > minX){
+				this.moveLeft();
+			}
 		};
 
 		this.moveDownAndRight = function(distance){
-			this.xPos += distance || defaultDiagonalMoveDistance;
-			this.yPos += distance || defaultDiagonalMoveDistance;
-			movePlayer();
+			if(this.yPos < maxY && this.xPos < maxX){
+				this.xPos += distance || defaultDiagonalMoveDistance;
+				this.yPos += distance || defaultDiagonalMoveDistance;
+				movePlayer();
+			}
+			else if(this.yPos < maxY){
+				this.moveDown();
+			}
+			else if(this.xPos < maxX){
+				this.moveRight();
+			}
 		};
 
 		this.moveUp = function(distance){
-			this.yPos -= distance || defaultMoveDistance;
-			movePlayer();
+			if(this.yPos > minY){
+				this.yPos -= distance || defaultMoveDistance;
+				movePlayer();
+			}
 		};
 
 		this.moveDown = function(distance){
-			this.yPos += distance || defaultMoveDistance;
-			movePlayer();
+			if(this.yPos < maxY){
+				this.yPos += distance || defaultMoveDistance;
+				movePlayer();
+			}
 		};
 
 		this.moveLeft = function(distance){
-			this.xPos -= distance || defaultMoveDistance;
-			movePlayer();
+			if(this.xPos > minX){
+				this.xPos -= distance || defaultMoveDistance;
+				movePlayer();
+			}
 		};
 
 		this.moveRight = function(distance){
-			this.xPos += distance || defaultMoveDistance;
-			movePlayer();
+			if(this.xPos < maxX){
+				this.xPos += distance || defaultMoveDistance;
+				movePlayer();
+			}
 		};
-
 	};
 
 	function bullet(clickEvent, player, bulletType){
 		var angle = degToRad(player.el.angle + 90);
 		var bulletSettings, yOffset, xOffset, slope;
 		var bulletDefaults = {
-				radius: 3,
-				fill: "white",
-				left: player.el._originalLeft + (32 * Math.cos(angle)),
-				top: player.el._originalTop + (32 * Math.sin(angle)),
+				radius: 1.5,
+				fill: "black",
+				left: player.el.left + (32 * Math.cos(angle)),
+				top: player.el.top + (32 * Math.sin(angle)),
 				originX: 'center',
 				originY: 'center'
 			};
@@ -327,7 +342,7 @@ $(document).ready(function(){
 		};
 
 		function move(){
-			var moveDistance = 5;
+			// var moveDistance = 5;
 			var counter = 0;
 
 			slug.top = slug.top + yOffset;
@@ -402,7 +417,6 @@ $(document).ready(function(){
 	};
 
 	function movePlayer(){
-		// $('body').css("background-position", backgroundXPos.toString() + "px " + backgroundYPos.toString() + "px");
 		p1.el.left = p1.xPos;
 		p1.el.top = p1.yPos;
 		canvas.renderAll();
@@ -433,100 +447,3 @@ $(document).ready(function(){
 	};
 
 });
-
-// var player1, player2;
-// var playing = true;
-
-// $(document).ready(function(){
-// 	$(".main").append("<canvas id='canvas' height='600' width='800'></canvas>");
-// 	$(document).on('keydown', handleKeyDown);
-// 	player = new Player(1);
-// 	player2 = new Player(2);
-// 	runGame();
-// });
-
-// var sprites = [];
-
-// function getContext(){
-// 	return $("#canvas")[0].getContext('2d');
-// };
-
-// function runGame(){
-// 	window.setInterval(function(){
-// 		getContext().clearRect(0, 0, 800, 600);
-// 		for(i in sprites){
-// 			if(!sprites[i].movingRight){
-// 				getContext().save;
-// 				getContext().scale(1, -1);
-// 			}
-// 			getContext().drawImage(sprites[i].image, sprites[i].xPos, sprites[i].yPos);
-// 		}
-// 	}, 0);
-// };
-
-// function Player(number){
-// 	this.xPos = 100;
-// 	this.yPos = 400;
-// 	this.movingRight = true;
-// 	this.image = new Image();
-
-// 	if(number === 1){
-// 		this.image.src = 'content/alex.jpg';
-// 	}
-// 	else if(number === 2){
-// 		this.image.src = 'content/ryan.jpg';
-// 	}
-// 	sprites.push(this);
-	
-// 	this.moveUp = function(){
-// 		this.yPos -= 5;
-// 	};
-// 	this.moveDown = function(){
-// 		this.yPos += 5;
-// 	};
-// 	this.moveLeft = function(){
-// 		if(this.movingRight){
-// 			this.movingRight = false;
-// 		}
-// 		this.xPos -= 5;
-// 	};
-// 	this.moveRight = function(){
-// 		if(!this.movingRight){
-// 			this.movingRight = true;
-// 		}
-// 		this.xPos += 5;
-// 	};
-// }
-
-
-// // var createPlayer = function (){
-// // 	base_image = new Image();
-// // 	base_image.src = 'content/ryan.jpg';
-// // 	base_image.onload = function(){
-// //   		getContext().drawImage(base_image, 100, 400);
-// //   	};
-// // };
-
-//  function handleKeyDown(e){
-// 	var key = e.keyCode
-// 	if(key === 87 || key === 38){
-// 		// Up
-// 		player.moveUp();
-// 	}
-// 	else if(key === 83 || key === 40 ){
-// 		// Down
-// 		player.moveDown();
-// 	}
-// 	else if(key === 65 || key === 37 ){
-// 		// Left
-// 		player.moveLeft();
-// 	}
-// 	else if(key === 68 || key === 39 ){
-// 		// Right
-// 		player.moveRight();
-// 	}
-// };
-
-
-
-
