@@ -10,12 +10,8 @@ $(document).ready(function(){
 	var defaultMoveDistance = 5;
 	var defaultDiagonalMoveDistance = defaultMoveDistance * 0.57;
 	var keys = [];
-	var minY = 9;
-	var minX = 9;
-	var maxY = 591;
-	var maxX = 791;
 
-	var canvas = new fabric.Canvas("c", { height: canvasHeight, width: canvasWidth});
+	var canvas = new fabric.Canvas("c", { height: canvasHeight, width: canvasWidth, selection: false });
 
 	var p1 = new Player();
 	playerSprites.push(p1);
@@ -36,7 +32,7 @@ $(document).ready(function(){
 	$(window).on('keyup', handleKeyUp);
 
 	var checkKeysID = setInterval(checkKeys, 25);
-
+	loadLevel(canvas);
 	window.requestAnimationFrame(gameLoop);
 
 	function gameLoop(){
@@ -44,7 +40,7 @@ $(document).ready(function(){
 
 		// Update Values
 
-		// Draw Game
+		// Draw Gameaw
 		canvas.renderAll();
 		window.requestAnimationFrame(gameLoop);
 	};
@@ -123,7 +119,8 @@ $(document).ready(function(){
 			top: canvasHeight / 2,
 			originX: "center",
 			originY: "center",
-			angle: 0
+			angle: 0,
+			selectable: false
 		};
 
 		var bladeDefaults = {
@@ -135,7 +132,8 @@ $(document).ready(function(){
 			originX: "center",
 			originY: "center",
 			strokeWidth: 1,
-			stroke: 'rgba(100,200,200,0.5)'
+			stroke: 'rgba(100,200,200,0.5)',
+			selectable: false
 		};
 
 		var gunDefaults = {
@@ -147,7 +145,8 @@ $(document).ready(function(){
 			originX: "center",
 			originY: "center",
 			strokeWidth: 1,
-			stroke: 'rgba(100,200,200,0.5)'
+			stroke: 'rgba(100,200,200,0.5)',
+			selectable: false
 		};
 
 		this.torso = new fabric.Rect(torsoDefaults);
@@ -324,7 +323,8 @@ $(document).ready(function(){
 				left: player.el.left + (32 * Math.cos(angle)),
 				top: player.el.top + (32 * Math.sin(angle)),
 				originX: 'center',
-				originY: 'center'
+				originY: 'center',
+				selectable: false
 			};
 
 		// Set up view elements
@@ -351,7 +351,7 @@ $(document).ready(function(){
 			slug.top = slug.top + yOffset;
 			slug.left = slug.left + xOffset;
 
-			if(!isOnScreen(slug.left, slug.top)){
+			if(!isOnScreen(slug.left, slug.top) || hasHitObject(slug.left, slug.top)){
 				clearInterval(moveIntervalID);
 				slug.remove();
 			}
@@ -371,6 +371,25 @@ $(document).ready(function(){
 			yOffset = (deltaY / magnitude) * 3;
 			xOffset = (deltaX / magnitude) * 3;
 		}
+
+		// Returns false or contact point coordinates
+		function hasHitObject(x, y){
+			for(var i = 1; i < canvas.getObjects().length; i++){
+				var object = canvas.getObjects()[i];
+				var left = object.left;
+				var right = object.left + object.currentWidth;
+				var top = object.top;
+				var bottom = object.top + object.currentHeight;
+				if((x < right && x > left) && (y < bottom && y > top)){
+					// TODO -- add logic to return actual point of contact
+					// To use for reflections
+					return true;
+				}
+				else{
+					return false;
+				}
+			}
+		}
 	}
 
 	function movePlayer(){
@@ -381,32 +400,6 @@ $(document).ready(function(){
 	function drawSprites(){
 		for(x in playerSprites){
 			canvas.add(playerSprites[x].el);
-		}
-	}
-	
-	function calculateAngle(opposite, adjacent, baseAngle){
-		opposite = Math.abs(opposite);
-		adjacent = Math.abs(adjacent);
-		hypotenuse = Math.sqrt(Math.pow(opposite, 2) + Math.pow(adjacent, 2));
-		var x = Math.asin(opposite / hypotenuse);
-		x = x * (180/Math.PI);
-		return x + baseAngle;
-	}
-
-	function degToRad(degrees){
-		return degrees * Math.PI / 180;
-	}
-
-	function radToDeg(radians){
-		return radians * 180 / Math.PI;
-	}
-
-	function isOnScreen(x, y){
-		if((y < maxY || y > minY) || (x < maxX || x > minX)){
-			return true;
-		}
-		else{
-			return false;
 		}
 	}
 
