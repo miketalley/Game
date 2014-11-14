@@ -7,8 +7,9 @@ $(document).ready(function(){
 	$('.main').attr("background", background);
 	var backgroundXPos = 0;
 	var backgroundYPos = 0;
+	var diagonalModifier = 0.57;
 	var defaultMoveDistance = 5;
-	var defaultDiagonalMoveDistance = defaultMoveDistance * 0.57;
+	var defaultDiagonalMoveDistance = defaultMoveDistance * diagonalModifier;
 	var keys = [];
 
 	var canvas = new fabric.Canvas("c", { height: canvasHeight, width: canvasWidth, selection: false });
@@ -233,8 +234,8 @@ $(document).ready(function(){
 
 		this.moveUpAndLeft = function(distance){
 			if(this.yPos > minY && this.xPos > minX){
-				this.xPos -= distance || defaultDiagonalMoveDistance;
-				this.yPos -= distance || defaultDiagonalMoveDistance;
+				this.xPos -= distance || defaultDiagonalMoveLeftDistance;
+				this.yPos -= distance || defaultDiagonalMoveUpDistance;
 				movePlayer();
 			}
 			else if(this.yPos > minY){
@@ -247,8 +248,8 @@ $(document).ready(function(){
 
 		this.moveUpAndRight = function(distance){
 			if(this.yPos > minY && this.xPos < maxX){
-				this.xPos += distance || defaultDiagonalMoveDistance;
-				this.yPos -= distance || defaultDiagonalMoveDistance;
+				this.xPos += distance || defaultDiagonalMoveRightDistance;
+				this.yPos -= distance || defaultDiagonalMoveUpDistance;
 				movePlayer();
 			}
 			else if(this.yPos > minY){
@@ -261,8 +262,8 @@ $(document).ready(function(){
 
 		this.moveDownAndLeft = function(distance){
 			if(this.yPos < maxY && this.xPos > minX){
-				this.xPos -= distance || defaultDiagonalMoveDistance;
-				this.yPos += distance || defaultDiagonalMoveDistance;
+				this.xPos -= distance || defaultDiagonalMoveLeftDistance;
+				this.yPos += distance || defaultDiagonalMoveDownDistance;
 				movePlayer();
 			}
 			else if(this.yPos < maxY){
@@ -275,8 +276,8 @@ $(document).ready(function(){
 
 		this.moveDownAndRight = function(distance){
 			if(this.yPos < maxY && this.xPos < maxX){
-				this.xPos += distance || defaultDiagonalMoveDistance;
-				this.yPos += distance || defaultDiagonalMoveDistance;
+				this.xPos += distance || defaultDiagonalMoveRightDistance;
+				this.yPos += distance || defaultDiagonalMoveDownDistance;
 				movePlayer();
 			}
 			else if(this.yPos < maxY){
@@ -316,7 +317,7 @@ $(document).ready(function(){
 		};
 
 		this.checkCollision = function(){
-			var objectHit = hasHitObject(this.xPos, this.yPos);
+			var objectHit = hasHitObject(this.xPos, this.yPos, 7);
 			var direction;
 			
 			if(objectHit){
@@ -325,22 +326,30 @@ $(document).ready(function(){
 			}
 			else{
 				defaultMoveUpDistance = defaultMoveDistance;
+				defaultDiagonalMoveDownDistance = defaultDiagonalMoveDistance;
 				defaultMoveDownDistance = defaultMoveDistance;
+				defaultDiagonalMoveUpDistance = defaultDiagonalMoveDistance;
 				defaultMoveLeftDistance = defaultMoveDistance;
+				defaultDiagonalMoveRightDistance = defaultDiagonalMoveDistance;
 				defaultMoveRightDistance = defaultMoveDistance;
+				defaultDiagonalMoveLeftDistance = defaultDiagonalMoveDistance;
 			}
 
 			if(direction === "top"){
 				defaultMoveDownDistance = 0;
+				defaultDiagonalMoveDownDistance = 0;
 			}
 			else if(direction === "bottom"){
 				defaultMoveUpDistance = 0;
+				defaultDiagonalMoveUpDistance = 0;
 			}
 			else if(direction === "left"){
 				defaultMoveRightDistance = 0;
+				defaultDiagonalMoveRightDistance = 0;
 			}
 			else if(direction === "right"){
 				defaultMoveLeftDistance = 0;
+				defaultDiagonalMoveLeftDistance = 0;
 			}
 		};
 	}

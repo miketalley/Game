@@ -35,13 +35,14 @@ function isOnScreen(x, y){
 }
 
 // Returns false or the object hit
-function hasHitObject(x, y){
+function hasHitObject(x, y, bufferZone){
+	var buffer = bufferZone || 0;
 	for(var i = 1; i < canvas.getObjects().length; i++){
 		var object = canvas.getObjects()[i];
-		var left = object.left;
-		var right = object.left + object.currentWidth;
-		var top = object.top;
-		var bottom = object.top + object.currentHeight;
+		var left = object.left - buffer;
+		var right = object.left + object.currentWidth + buffer;
+		var top = object.top - buffer;
+		var bottom = object.top + object.currentHeight + buffer;
 		if((x < right && x > left) && (y < bottom && y > top)){
 			return object;
 		}
