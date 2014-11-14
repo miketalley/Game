@@ -1,6 +1,8 @@
 $(document).ready(function(){
 	var canvasWidth = 800;
 	var canvasHeight = 600;
+	// var canvasWidth = $(window).innerWidth();
+	// var canvasHeight = $(window).innerHeight();
 	var mouseX, mouseY;
 	var playerSprites = [];
 	var background = "./content/grass.jpg";
@@ -24,6 +26,8 @@ $(document).ready(function(){
 		mouseX = e.clientX;
 		mouseY = e.clientY;
 		p1.faceCursor();
+
+		canvas.renderAll();
 	});
 	$(document).on('contextmenu', function(e){
 		e.preventDefault();
@@ -36,18 +40,6 @@ $(document).ready(function(){
 	$(window).on('keyup', handleKeyUp);
 
 	var checkKeysID = setInterval(checkKeys, 25);
-
-	window.requestAnimationFrame(gameLoop);
-
-	function gameLoop(){
-		// Check Inputs
-
-		// Update Values
-
-		// Draw Game
-		canvas.renderAll();
-		window.requestAnimationFrame(gameLoop);
-	};
 
 	function handleKeyDown(e){
 		var e = e || event;
@@ -93,6 +85,7 @@ $(document).ready(function(){
 		else if( button.right ){
 			p1.moveRight();
 		}
+		console.log('Left: ', button.left, ' Right: ', button.right, ' Up: ', button.up, ' Down: ', button.down);
 	};
 
 	function Player(){
@@ -219,6 +212,7 @@ $(document).ready(function(){
 				var that = this;
 				setTimeout(function(){
 					that.el.remove(that.blade);
+					canvas.renderAll();
 				}, 200);
 			}
 		};
@@ -313,7 +307,7 @@ $(document).ready(function(){
 				movePlayer();
 			}
 		};
-	}
+	};
 
 	function bullet(clickEvent, player, bulletType){
 		var angle = degToRad(player.el.angle + 90);
@@ -345,69 +339,112 @@ $(document).ready(function(){
 
 		function fire(){
 			canvas.add(slug);
-		}
+		};
 
 		function move(){
+			// var moveDistance = 5;
+			var counter = 0;
+
 			slug.top = slug.top + yOffset;
 			slug.left = slug.left + xOffset;
 
-			if(!isOnScreen(slug.left, slug.top)){
+			counter += 1;
+			if((slug.top > maxY || slug.top < minY) || (slug.left > maxX || slug.left < minX)){
 				clearInterval(moveIntervalID);
 				slug.remove();
 			}
-		}
+			canvas.renderAll();
+		};
+
+		function inBounds(){
+			// While bullet not out of visual area
+			// TODO -- insert logic for checking if 
+			// bullet is still visible
+			// remove bullet when off screen
+			return true;
+		};
 
 		function calculateSlopeOffsets(){
 			var x1 = clickEvent.clientX;
 			var y1 = clickEvent.clientY;
 			var x = slug.left;
 			var y = slug.top;
-			var deltaX = x1 - x;
-			var deltaY = y1 - y;
-			var magnitude;
 
-			magnitude = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
+			if(slope !== 0){
+				if(x1 > x && y1 > y){
+					// Down and right
+					xOffset = 3;
+					yOffset = 3;
 
-			yOffset = (deltaY / magnitude) * 3;
-			xOffset = (deltaX / magnitude) * 3;
-		}
-	}
+
+				}
+				else if(x1 > x && y1 < y){
+					// Up and right
+					xOffset = 3;
+					yOffset = -3;
+				}
+				else if(x1 < x && y1 > y){
+					// Down and left
+					xOffset = -3;
+					yOffset = 3;
+				}
+				else if(x1 < x && y1 < y){
+					// Down and right
+					xOffset = -3;
+					yOffset = -3;
+				}
+			}
+			else if(slope && slope == 0){
+				if(x1 > x){
+					xOffset = 3;
+					yOffset = 0;
+				}
+				else{
+					xOffset = -3;
+					yOffset = 0;
+				}
+			}
+			else{
+				if(y1 > y){
+					xOffset = 0;
+					yOffset = 3;
+				}
+				else{
+					xOffset = 0;
+					yOffset = -3;
+				}
+			}
+		};
+	};
 
 	function movePlayer(){
 		p1.el.left = p1.xPos;
 		p1.el.top = p1.yPos;
-	}
+		canvas.renderAll();
+	};
 
 	function drawSprites(){
 		for(x in playerSprites){
 			canvas.add(playerSprites[x].el);
 		}
-	}
+	};
 	
 	function calculateAngle(opposite, adjacent, baseAngle){
 		opposite = Math.abs(opposite);
 		adjacent = Math.abs(adjacent);
 		hypotenuse = Math.sqrt(Math.pow(opposite, 2) + Math.pow(adjacent, 2));
+		// console.log(opposite, adjacent, hypotenuse);
 		var x = Math.asin(opposite / hypotenuse);
 		x = x * (180/Math.PI);
 		return x + baseAngle;
-	}
+	};
 
 	function degToRad(degrees){
 		return degrees * Math.PI / 180;
-	}
+	};
 
 	function radToDeg(radians){
 		return radians * 180 / Math.PI;
-	}
-
-	function isOnScreen(x, y){
-		if((y < maxY || y > minY) || (x < maxX || x > minX)){
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
+	};
 
 });
