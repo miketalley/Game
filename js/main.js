@@ -12,6 +12,7 @@ $(document).ready(function(){
 	var keys = [];
 
 	var canvas = new fabric.Canvas("c", { height: canvasHeight, width: canvasWidth, selection: false });
+	setCanvas(canvas);
 
 	var p1 = new Player();
 	playerSprites.push(p1);
@@ -39,6 +40,7 @@ $(document).ready(function(){
 		// Check Inputs
 
 		// Update Values
+		p1.checkCollision();
 
 		// Draw Gameaw
 		canvas.renderAll();
@@ -287,29 +289,58 @@ $(document).ready(function(){
 
 		this.moveUp = function(distance){
 			if(this.yPos > minY){
-				this.yPos -= distance || defaultMoveDistance;
+				this.yPos -= distance || defaultMoveUpDistance;
 				movePlayer();
 			}
 		};
 
 		this.moveDown = function(distance){
 			if(this.yPos < maxY){
-				this.yPos += distance || defaultMoveDistance;
+				this.yPos += distance || defaultMoveDownDistance;
 				movePlayer();
 			}
 		};
 
 		this.moveLeft = function(distance){
 			if(this.xPos > minX){
-				this.xPos -= distance || defaultMoveDistance;
+				this.xPos -= distance || defaultMoveLeftDistance;
 				movePlayer();
 			}
 		};
 
 		this.moveRight = function(distance){
 			if(this.xPos < maxX){
-				this.xPos += distance || defaultMoveDistance;
+				this.xPos += distance || defaultMoveRightDistance;
 				movePlayer();
+			}
+		};
+
+		this.checkCollision = function(){
+			var objectHit = hasHitObject(this.xPos, this.yPos);
+			var direction;
+			
+			if(objectHit){
+				direction = checkCollisionDirection(this.xPos, this.yPos, objectHit);
+				console.log(direction);
+			}
+			else{
+				defaultMoveUpDistance = defaultMoveDistance;
+				defaultMoveDownDistance = defaultMoveDistance;
+				defaultMoveLeftDistance = defaultMoveDistance;
+				defaultMoveRightDistance = defaultMoveDistance;
+			}
+
+			if(direction === "top"){
+				defaultMoveDownDistance = 0;
+			}
+			else if(direction === "bottom"){
+				defaultMoveUpDistance = 0;
+			}
+			else if(direction === "left"){
+				defaultMoveRightDistance = 0;
+			}
+			else if(direction === "right"){
+				defaultMoveLeftDistance = 0;
 			}
 		};
 	}
@@ -344,7 +375,9 @@ $(document).ready(function(){
 		var moveIntervalID = setInterval(move, 10);
 
 		function fire(){
-			canvas.add(slug);
+			if(!hasHitObject(slug.left, slug.top)){
+				canvas.add(slug);
+			}
 		}
 
 		function move(){
@@ -370,25 +403,6 @@ $(document).ready(function(){
 
 			yOffset = (deltaY / magnitude) * 3;
 			xOffset = (deltaX / magnitude) * 3;
-		}
-
-		// Returns false or contact point coordinates
-		function hasHitObject(x, y){
-			for(var i = 1; i < canvas.getObjects().length; i++){
-				var object = canvas.getObjects()[i];
-				var left = object.left;
-				var right = object.left + object.currentWidth;
-				var top = object.top;
-				var bottom = object.top + object.currentHeight;
-				if((x < right && x > left) && (y < bottom && y > top)){
-					// TODO -- add logic to return actual point of contact
-					// To use for reflections
-					return true;
-				}
-				else{
-					return false;
-				}
-			}
 		}
 	}
 
