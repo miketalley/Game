@@ -11,6 +11,7 @@ $(document).ready(function(){
 	var defaultMoveDistance = 5;
 	var defaultDiagonalMoveDistance = defaultMoveDistance * diagonalModifier;
 	var keys = [];
+	var faceCursorEnabled = true;
 
 	var canvas = new fabric.Canvas("c", { height: canvasHeight, width: canvasWidth, selection: false });
 	setCanvas(canvas);
@@ -21,7 +22,9 @@ $(document).ready(function(){
 	$(document).mousemove(function(e){
 		mouseX = e.clientX;
 		mouseY = e.clientY;
-		p1.faceCursor();
+		if(faceCursorEnabled){
+			p1.faceCursor();
+		}
 	});
 	$(document).on('contextmenu', function(e){
 		e.preventDefault();
@@ -51,6 +54,7 @@ $(document).ready(function(){
 	function handleKeyDown(e){
 		var e = e || event;
 		var key = e.keyCode;
+
 		keys[key] = true;
 	};
 
@@ -218,10 +222,22 @@ $(document).ready(function(){
 			// swordGroup = new fabric.Group([blade, hilt, point]);
 			if(!this.el.contains(this.blade)){
 				this.el.add(this.blade);
+				var angleStart = this.el.angle;
 				var that = this;
-				setTimeout(function(){
-					that.el.remove(that.blade);
-				}, 200);
+				var turnIntervalID = setInterval(turn, 8);
+				faceCursorEnabled = false;
+
+				function turn(){
+					if(angleStart - that.el.angle < 360){
+						that.el.angle -= 12;
+					}
+					else{
+						that.el.angle = angleStart;
+						that.el.remove(that.blade);
+						clearInterval(turnIntervalID);
+						faceCursorEnabled = true;
+					}
+				}
 			}
 		};
 
