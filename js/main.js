@@ -9,6 +9,14 @@ $(document).ready(function(){
 	var backgroundYPos = 0;
 	var diagonalModifier = 0.57;
 	var defaultMoveDistance = 5;
+	var defaultMoveUpDistance = 5;
+	var defaultMoveDownDistance = 5;
+	var defaultMoveLeftDistance = 5;
+	var defaultMoveRightDistance = 5;
+	var defaultDiagonalMoveUpDistance = 5;
+	var defaultDiagonalMoveDownDistance = 5;
+	var defaultDiagonalMoveLeftDistance = 5;
+	var defaultDiagonalMoveRightDistance = 5;
 	var defaultDiagonalMoveDistance = defaultMoveDistance * diagonalModifier;
 	var keys = [];
 	var faceCursorEnabled = true;
@@ -44,25 +52,26 @@ $(document).ready(function(){
 		// Check Inputs
 
 		// Update Values
-		p1.checkCollision();
+		// p1.checkCollision();
+		checkBulletCollision();
 
-		// Draw Gameaw
+		// Draw Game
 		canvas.renderAll();
 		window.requestAnimationFrame(gameLoop);
-	};
+	}
 
 	function handleKeyDown(e){
 		var e = e || event;
 		var key = e.keyCode;
 
 		keys[key] = true;
-	};
+	}
 
 	function handleKeyUp(e){
 		var e = e || event;
 		var key = e.keyCode;
 		keys[key] = false;
-	};
+	}
 
 	function checkKeys(){
 		var button = {
@@ -70,7 +79,7 @@ $(document).ready(function(){
 			down: keys["83"] || keys["40"],
 			left: keys["65"] || keys["37"],
 			right: keys["68"] || keys["39"]
-		}
+		};
 
 		if( button.up && button.left ){
 			p1.moveUpAndLeft();
@@ -96,7 +105,7 @@ $(document).ready(function(){
 		else if( button.right ){
 			p1.moveRight();
 		}
-	};
+	}
 
 	function Player(){
 		this.xPos = canvasWidth / 2;
@@ -161,9 +170,9 @@ $(document).ready(function(){
 		this.blade = new fabric.Rect(bladeDefaults);
 		this.gun = new fabric.Rect(gunDefaults);
 		this.el = this.el || new fabric.Group([this.torso, this.head], groupDefaults);
-		
+
 		this.faceCursor = function(){
-			var hypotenuse, adjacent, opposite, baseAngle, calculatedAngle
+			var hypotenuse, adjacent, opposite, baseAngle, calculatedAngle;
 				deltaX = (this.el.left) - mouseX,
 				deltaY = (this.el.top) - mouseY;
 
@@ -175,7 +184,7 @@ $(document).ready(function(){
 				}
 				else if(deltaY > 0){
 					// Left Top
-					this.el.angle = calculateAngle(deltaY, deltaX, 90);				
+					this.el.angle = calculateAngle(deltaY, deltaX, 90);
 				}
 				else{
 					// Left Side on Line
@@ -194,7 +203,7 @@ $(document).ready(function(){
 				}
 				else{
 					// Right Side on Line
-					this.el.angle = 270;				
+					this.el.angle = 270;
 				}
 			}
 			else{
@@ -246,7 +255,7 @@ $(document).ready(function(){
 				this.el.add(this.gun);
 			}
 			var slug = new bullet(clickEvent, this);
-		};	
+		};
 
 		this.moveUpAndLeft = function(distance){
 			if(this.yPos > minY && this.xPos > minX){
@@ -335,10 +344,9 @@ $(document).ready(function(){
 		this.checkCollision = function(){
 			var objectHit = hasHitObject(this.xPos, this.yPos, 7);
 			var direction;
-			
+
 			if(objectHit){
 				direction = checkCollisionDirection(this.xPos, this.yPos, objectHit);
-				console.log(direction);
 			}
 			else{
 				defaultMoveUpDistance = defaultMoveDistance;
@@ -388,6 +396,7 @@ $(document).ready(function(){
 			// Add various bulletSettings attributes here
 		}
 		var slug = new fabric.Circle(bulletSettings || bulletDefaults);
+		bullets.push(slug);
 
 		// Run calculations on bullet trajectory
 		if(player.el.angle !== 90 && player.el.angle !== 180){
@@ -409,7 +418,7 @@ $(document).ready(function(){
 			slug.top = slug.top + yOffset;
 			slug.left = slug.left + xOffset;
 
-			if(!isOnScreen(slug.left, slug.top) || hasHitObject(slug.left, slug.top)){
+			if(!isOnScreen(slug.left, slug.top) || hasHitObject(slug.left, slug.top, p1)){
 				clearInterval(moveIntervalID);
 				slug.remove();
 			}

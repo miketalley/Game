@@ -12,7 +12,7 @@ var R = {
 var testLevel = [
 	R, R, R,
 	R, R, R,
-	R, S, R 
+	R, S, R
 ];
 
 var levels = [
@@ -33,5 +33,18 @@ function loadLevel(canvas){
 		selectable: false
 	});
 
+	var column_small_destroyable = new fabric.Rect({
+		width: 80,
+		height: 80,
+		fill: 'blue',
+		stroke: 'red',
+		strokeWidth: 2,
+		left: 500,
+		top: 400,
+		selectable: false,
+		destroyable: true
+	});
+
 	canvas.add(column_small);
+	canvas.add(column_small_destroyable);
 }
