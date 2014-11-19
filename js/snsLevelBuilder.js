@@ -26,32 +26,35 @@ function snsLevelBuilder(){
 	self.elementStrokeStyle = ko.observable();
 
 	self.element = ko.computed(function(){
-		var elObj = {
+		return {
 			name: self.elementName(),
-			type: self.elementType(),
+			type: self.elementType() === "Circle" ? "arc" : "rect",
+			radius: self.elementRadius(),
+			width: self.elementWidth(),
+			height: self.elementHeight(),
 			fillStyle: self.elementFillStyle(),
 			lineWidth: self.elementLineWidth(),
 			strokeStyle: self.elementStrokeStyle()
-		};
-
-		if(self.elementType === "Circle"){
-			elObj.type = "arc";
-			elObj.radius = self.elementRadius();
-		}
-		else if(self.elementType === "Rectangle"){
-			elObj.type = "rect";
-			elObj.height = self.elementHeight();
-			elObj.width = self.elementWidth();
 		}
 
-		return elObj;
+		// if(self.elementType === "Circle"){
+		// 	elObj.type = "arc";
+		// 	elObj.radius = self.elementRadius();
+		// }
+		// else if(self.elementType === "Rectangle"){
+		// 	elObj.type = "rect";
+		// 	elObj.height = self.elementHeight();
+		// 	elObj.width = self.elementWidth();
+		// }
+
+		// return elObj;
 	});
 
 	self.previewElement = function(){
 		var newVal = self.element();
 		// Add to preview canvas
-		var xOffset = (previewCanvasWidth - (newVal.width || newVal.radius)) / 2,
-			yOffset = (previewCanvasHeight - (newVal.height || newVal.radius)) / 2;
+		var xOffset = (previewCanvasWidth - (newVal.width || newVal.radius * 2)) / 2,
+			yOffset = (previewCanvasHeight - (newVal.height || newVal.radius * 2)) / 2;
 
 		if(newVal.type === "arc"){
 			pc.beginPath();
