@@ -1,12 +1,15 @@
+
+
 // Constructors
 function Player(settings){
   var defaultSettings = {
     health: 100,
-    alive: true,
-    name: 'Player',
+    name: 'Clint',
     color: 'blue',
     startX: canvasWidth / 2,
-    startY: canvasHeight / 2
+    startY: canvasHeight / 2,
+    ranged: 'rocks',
+    melee: 'hands'
   };
 }
 

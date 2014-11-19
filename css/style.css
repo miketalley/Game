@@ -2,18 +2,35 @@ body {
 	overflow: hidden;
 }
 
-.main {
-	width: 800px;
-	height: 600px;
+#c {
 	padding: 0;
 	margin: 0;
 	border: 1px solid black;
 }
 
-/*#player {
-	position: absolute;
-	background: url("../content/alex.jpg") no-repeat;
-	width: 33px;
-	height: 65px;
-	border: 1px solid red;
-}*/
+#preview-canvas {
+	padding: 0;
+	margin: 0;
+	border: 1px solid black;
+}
+
+.level-select-container {
+	float: left;
+	width: 100%;
+	padding: 5px;
+}
+
+.level-object-container {
+	float: left;
+	width: 100%;
+}
+
+.inputs-container {
+	display: block;
+}
+
+.inputs-container input, .inputs-container select {
+	margin: 5px;
+	display: block;
+	width: 100%;
+}
