@@ -19,7 +19,7 @@ Ranged Attack - Left Mouse Button
 Melee Attack - Right Mouse Button
 
 - Demo - http://www.hookygames.com/Game
-- Level Editor - http://www.hookygames.com/Game/snsLevelEditor.html
+- Level Editor - http://www.hookygames.com/Game/snsLevelBuilder.html
 
 I will be updating this pretty frequently. Check back soon!
 
