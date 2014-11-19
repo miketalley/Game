@@ -50,11 +50,13 @@ function snsLevelBuilder(){
 		// return elObj;
 	});
 
+	// Add to preview of element to canvas
 	self.previewElement = function(){
 		var newVal = self.element();
-		// Add to preview canvas
-		var xOffset = (previewCanvasWidth - (newVal.width || newVal.radius * 2)) / 2,
-			yOffset = (previewCanvasHeight - (newVal.height || newVal.radius * 2)) / 2;
+		var xOffset = (previewCanvasWidth - (newVal.width || 0)) / 2,
+			yOffset = (previewCanvasHeight - (newVal.height || 0)) / 2;
+
+		clearCanvas();
 
 		if(newVal.type === "arc"){
 			pc.beginPath();
@@ -121,7 +123,9 @@ function snsLevelBuilder(){
 		});
 	};
 
-
+	function clearCanvas(){
+		cc.clearRect(0, 0, canvasWidth, canvasHeight);
+	}
 
 }
 
