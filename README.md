@@ -18,8 +18,8 @@ Movement - W, A, S, D, Up, Down, Left, Right
 Ranged Attack - Left Mouse Button
 Melee Attack - Right Mouse Button
 
-Demo - http://www.hookygames.com/Game
-Level Editor - http://www.hookygames.com/Game/snsLevelEditor.html
+- Demo - http://www.hookygames.com/Game
+- Level Editor - http://www.hookygames.com/Game/snsLevelEditor.html
 
 I will be updating this pretty frequently. Check back soon!
 
