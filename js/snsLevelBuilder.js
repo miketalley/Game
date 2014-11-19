@@ -56,7 +56,7 @@ function snsLevelBuilder(){
 		var xOffset = (previewCanvasWidth - (newVal.width || 0)) / 2,
 			yOffset = (previewCanvasHeight - (newVal.height || 0)) / 2;
 
-		clearCanvas();
+		clearPreviewCanvas();
 
 		if(newVal.type === "arc"){
 			pc.beginPath();
@@ -123,8 +123,8 @@ function snsLevelBuilder(){
 		});
 	};
 
-	function clearCanvas(){
-		cc.clearRect(0, 0, canvasWidth, canvasHeight);
+	function clearPreviewCanvas(){
+		pc.clearRect(0, 0, canvasWidth, canvasHeight);
 	}
 
 }
