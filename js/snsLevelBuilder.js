@@ -16,93 +16,55 @@ function snsLevelBuilder(){
 	self.widths = ko.observableArray([0, 1, 2, 3, 4, 5]);
 
 	// Element Builder
-	self.elementName = ko.observable();
-	self.elementType = ko.observable();
-	self.elementRadius = ko.observable();
-	self.elementWidth = ko.observable();
-	self.elementHeight = ko.observable();
-	self.elementFillStyle = ko.observable();
-	self.elementLineWidth = ko.observable();
-	self.elementStrokeStyle = ko.observable();
+	self.previewElementName = ko.observable();
+	self.previewElementType = ko.observable();
+	self.previewElementRadius = ko.observable();
+	self.previewElementWidth = ko.observable();
+	self.previewElementHeight = ko.observable();
+	self.previewElementFillStyle = ko.observable();
+	self.previewElementLineWidth = ko.observable();
+	self.previewElementStrokeStyle = ko.observable();
 
-	self.element = ko.computed(function(){
+	self.previewElementObject = ko.computed(function(){
 		return {
-			name: self.elementName(),
-			type: self.elementType() === "Circle" ? "arc" : "rect",
-			radius: self.elementRadius(),
-			width: self.elementWidth(),
-			height: self.elementHeight(),
-			fillStyle: self.elementFillStyle(),
-			lineWidth: self.elementLineWidth(),
-			strokeStyle: self.elementStrokeStyle()
+			name: self.previewElementName(),
+			type: getType(),
+			radius: self.previewElementRadius(),
+			width: self.previewElementWidth(),
+			height: self.previewElementHeight(),
+			fillStyle: self.previewElementFillStyle(),
+			lineWidth: self.previewElementLineWidth(),
+			strokeStyle: self.previewElementStrokeStyle()
 		}
-
-		// if(self.elementType === "Circle"){
-		// 	elObj.type = "arc";
-		// 	elObj.radius = self.elementRadius();
-		// }
-		// else if(self.elementType === "Rectangle"){
-		// 	elObj.type = "rect";
-		// 	elObj.height = self.elementHeight();
-		// 	elObj.width = self.elementWidth();
-		// }
-
-		// return elObj;
 	});
 
 	// Add to preview of element to canvas
 	self.previewElement = function(){
-		var newVal = self.element();
-		var xOffset = (previewCanvasWidth - (newVal.width || 0)) / 2,
-			yOffset = (previewCanvasHeight - (newVal.height || 0)) / 2;
-
+		var element = self.previewElementObject();
+		clearPreviewInputs();
 		clearPreviewCanvas();
-
-		if(newVal.type === "arc"){
-			pc.beginPath();
-			pc[newVal.type](xOffset, yOffset, newVal.radius, 0, 2 * Math.PI, false);
-		}
-		else if(newVal.type === "rect"){
-			pc[newVal.type](xOffset, yOffset, newVal.width, newVal.height);
-		}
-		pc.fillStyle = newVal.fillStyle;
-		pc.fill();
-		pc.lineWidth = newVal.lineWidth;
-		pc.strokeStyle = newVal.strokeStyle;
-		pc.stroke();
+		buildElement(element);
 	};
 
+	function buildElement(el){
+		var widthOffset = el.width || 0,
+			heightOffset = el.height || 0,
+			xOffset = (previewCanvasWidth - widthOffset) / 2,
+			yOffset = (previewCanvasHeight - heightOffset) / 2;
 
-	// self.levels = ko.observableArray([1,2,3,4,5]);
-	// self.levelsObject = ko.observable();
-	// self.selectedLevel = ko.observable();
-	
-	// self.levelElements = ko.observableArray();
-	// Example levelElement
-	// {
-	// 	name: "Small Rectangle",
-	// 	type: "rect",
-	// 	width: 150,
-	// 	height: 100,
-	//  fillStyle: fillcolor,
-	//  lineWidth: borderwidth,
-	//  strokeStyle: bordercolor
-	// }
-	// self.levelElementsObject = ko.observable();
-	// self.selectedLevelElement = ko.observable();
-	// self.selectedLevelElement.subscribe(function(newVal){
-	// 	// Add to preview canvas
-	// 	var xOffset = (previewCanvasWidth - newVal.width) / 2,
-	// 		yOffset = (previewCanvasHeight - newVal.height) / 2;
-
-	// 	pc[newVal.type](xOffset, yOffset, newVal.width, newVal.height);
-	// 	pc.fillStyle = newVal.fillStyle;
-	// 	pc.fill();
-	// 	pc.lineWidth = newVal.lineWidth;
-	// 	pc.strokeStyle = newVal.strokeStyle;
-	// 	pc.stroke();
-	// });
-
+		if(el.type === "arc"){
+			pc.beginPath();
+			pc[el.type](xOffset, yOffset, el.radius, 0, 2 * Math.PI, false);
+		}
+		else if(el.type === "rect"){
+			pc[el.type](xOffset, yOffset, el.width, el.height);
+		}
+		pc.fillStyle = el.fillStyle;
+		pc.fill();
+		pc.lineWidth = el.lineWidth;
+		pc.strokeStyle = el.strokeStyle;
+		pc.stroke();
+	};
 
 	initialize();
 
@@ -124,7 +86,33 @@ function snsLevelBuilder(){
 	};
 
 	function clearPreviewCanvas(){
-		pc.clearRect(0, 0, canvasWidth, canvasHeight);
+		// Doesn't clear lines
+		// pc.clearRect(0, 0, previewCanvasWidth, previewCanvasHeight);
+		previewCanvas.height = previewCanvasHeight;
+		previewCanvas.width = previewCanvasWidth;
+	}
+
+	function clearPreviewInputs(){
+		self.previewElementName(null);
+		self.previewElementType(null);
+		self.previewElementRadius(null);
+		self.previewElementWidth(null);
+		self.previewElementHeight(null);
+		self.previewElementFillStyle(null);
+		self.previewElementLineWidth(null);
+		self.previewElementStrokeStyle(null);
+	}
+
+	// Converts human readable element type to key
+	function getType(){
+		switch(self.previewElementType()){
+			case "Circle":
+				return "arc";
+				break
+			case "Rectangle":
+				return "rect";
+				break;
+		}
 	}
 
 }
