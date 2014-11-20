@@ -17,6 +17,9 @@
 	<div class="controls" style="float: left; margin-left: 20px;">
 		<div class="level-object-container">
 			<canvas id="preview-canvas"></canvas>
+			<div>
+				Elements:<select data-bind="options: builtElements, optionsText: function(item){return item.name}, optionsCaption: 'Select Built Element', value: selectedBuiltElement"></select>
+			</div>
 			<div class="inputs-container">
 				<form data-bind="submit: previewElement">
 					Name: <input type="text" data-bind="textInput: previewElementName"></input>
@@ -27,7 +30,7 @@
 					Fill Color: <select data-bind="options: colors, value: previewElementFillStyle"></select>
 					Border: <select data-bind="options: widths, value: previewElementLineWidth"></select>
 					Border Color: <select data-bind="options: colors, value: previewElementStrokeStyle"></select>
-					<button type="submit">Preview Element</button>
+					<button type="submit">Preview Element</button><button data-bind="clearPreviewCanvas">Clear</button>
 				</form>
 			</div>
 		</div>

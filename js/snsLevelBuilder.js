@@ -38,11 +38,20 @@ function snsLevelBuilder(){
 		}
 	});
 
+	self.builtElements = ko.observableArray();
+	self.selectedBuiltElement = ko.observable();
+	self.selectedBuiltElement.subscribe(function(el){
+		clearPreviewInputs();
+		clearPreviewCanvas();
+		buildShapeElement(el);
+	});
+
 	// Add to preview of element to canvas
 	self.previewElement = function(){
 		var element = self.previewElementObject();
 		clearPreviewInputs();
 		clearPreviewCanvas();
+		self.builtElements.push(element);
 		buildShapeElement(element);
 	};
 
