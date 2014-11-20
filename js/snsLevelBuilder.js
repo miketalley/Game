@@ -18,6 +18,15 @@ function snsLevelBuilder(){
 	// Element Builder
 	self.previewElementName = ko.observable();
 	self.previewElementType = ko.observable();
+	self.previewElementType.subscribe(function(type){
+		if(type === "Circle"){
+			self.previewElementHeight(null);
+			self.previewElementWidth(null);
+		}
+		else if(type === "Rectangle"){
+			self.previewElementRadius(null);
+		}
+	});
 	self.previewElementRadius = ko.observable();
 	self.previewElementWidth = ko.observable();
 	self.previewElementHeight = ko.observable();
@@ -41,18 +50,23 @@ function snsLevelBuilder(){
 	self.builtElements = ko.observableArray();
 	self.selectedBuiltElement = ko.observable();
 	self.selectedBuiltElement.subscribe(function(el){
-		clearPreviewInputs();
 		clearPreviewCanvas();
 		buildShapeElement(el);
 	});
 
-	// Add to preview of element to canvas
 	self.previewElement = function(){
 		var element = self.previewElementObject();
-		clearPreviewInputs();
-		clearPreviewCanvas();
-		self.builtElements.push(element);
-		buildShapeElement(element);
+		if(element.name && !nameExists(element.name, self.builtElements())){
+			message("Name is taken! Please choose another.");
+		}
+		else if(element.name && element.type && element.radius > 0 || (element.width > 0 && element.height > 0)){
+			clearPreviewCanvas();
+			self.builtElements.push(element);
+			buildShapeElement(element);
+		}
+		else{
+			message("Please fill out form completely.");
+		}
 	};
 
 	function buildShapeElement(el){
@@ -94,6 +108,10 @@ function snsLevelBuilder(){
 		});
 	};
 
+	self.clearPreview = function(){
+		clearPreviewCanvas();
+	}
+
 	function clearCanvas(){
 		canvas.height = canvasHeight;
 		canvas.width = canvasWidth;
@@ -106,17 +124,6 @@ function snsLevelBuilder(){
 		// pc.clearRect(0, 0, previewCanvasWidth, previewCanvasHeight);
 	}
 
-	function clearPreviewInputs(){
-		self.previewElementName(null);
-		self.previewElementType(null);
-		self.previewElementRadius(null);
-		self.previewElementWidth(null);
-		self.previewElementHeight(null);
-		self.previewElementFillStyle(null);
-		self.previewElementLineWidth(null);
-		self.previewElementStrokeStyle(null);
-	}
-
 	// Converts human readable element type to key
 	function getType(){
 		switch(self.previewElementType()){
@@ -127,6 +134,26 @@ function snsLevelBuilder(){
 				return "rect";
 				break;
 		}
+	}
+
+	function message(text){
+		$("#message-output").text(text);
+		setTimeout(function(){
+			$("#message-output").text();	
+		}, 2000);
+	}
+
+	function nameExists(name, array){
+		var exists = false;
+		name = name.toLowerCase();
+
+		for(var i = 0; i < array.length; i++){
+			debugger;
+			if(name === array[i].name.toLowerCase()){
+				exists = true;
+			}
+		}
+		return exists;
 	}
 
 }

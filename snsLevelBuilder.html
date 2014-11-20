@@ -30,8 +30,10 @@
 					Fill Color: <select data-bind="options: colors, value: previewElementFillStyle"></select>
 					Border: <select data-bind="options: widths, value: previewElementLineWidth"></select>
 					Border Color: <select data-bind="options: colors, value: previewElementStrokeStyle"></select>
-					<button type="submit">Preview Element</button><button data-bind="clearPreviewCanvas">Clear</button>
+					<button type="submit">Preview Element</button>
 				</form>
+				<button data-bind="clearPreview">Clear</button>
+				<div id="message-output"></div>
 			</div>
 		</div>
 	</div>
