@@ -4,7 +4,7 @@ function snsLevelBuilder(){
 		canvasHeight = 600,
 		previewCanvasWidth = 200,
 		previewCanvasHeight = 200,
-		fbUrl = "https://blistering-fire-3558.firebaseio.com/",
+		fbUrl = "https://blistering-fire-3558.firebaseio.com/ShootAndSlash",
 		canvas = $("#c")[0],
 		cc = canvas.getContext("2d"),
 		previewCanvas = $("#preview-canvas")[0],
@@ -43,10 +43,10 @@ function snsLevelBuilder(){
 		var element = self.previewElementObject();
 		clearPreviewInputs();
 		clearPreviewCanvas();
-		buildElement(element);
+		buildShapeElement(element);
 	};
 
-	function buildElement(el){
+	function buildShapeElement(el){
 		var widthOffset = el.width || 0,
 			heightOffset = el.height || 0,
 			xOffset = (previewCanvasWidth - widthOffset) / 2,
@@ -85,11 +85,16 @@ function snsLevelBuilder(){
 		});
 	};
 
+	function clearCanvas(){
+		canvas.height = canvasHeight;
+		canvas.width = canvasWidth;
+	}
+
 	function clearPreviewCanvas(){
-		// Doesn't clear lines
-		// pc.clearRect(0, 0, previewCanvasWidth, previewCanvasHeight);
 		previewCanvas.height = previewCanvasHeight;
 		previewCanvas.width = previewCanvasWidth;
+		// Doesn't clear lines
+		// pc.clearRect(0, 0, previewCanvasWidth, previewCanvasHeight);
 	}
 
 	function clearPreviewInputs(){
