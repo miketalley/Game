@@ -4,7 +4,6 @@ function snsLevelBuilder(){
 		canvasHeight = 600,
 		previewCanvasWidth = 200,
 		previewCanvasHeight = 200,
-		fbUrl = "https://blistering-fire-3558.firebaseio.com/ShootAndSlash",
 		canvas = $("#c")[0],
 		cc = canvas.getContext("2d"),
 		previewCanvas = $("#preview-canvas")[0],
@@ -102,10 +101,10 @@ function snsLevelBuilder(){
 		previewCanvas.width = previewCanvasWidth;
 		previewCanvas.height = previewCanvasHeight;
 
-		$.get(fbUrl + "/levels.json", function(response){
-			if(response){
-			}
-		});
+		// $.get(fbUrl + "/levels.json", function(response){
+		// 	if(response){
+		// 	}
+		// });
 	};
 
 	self.clearPreview = function(){

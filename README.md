@@ -11,9 +11,8 @@ Current Features
 - Colission detection for bullets
 - Level editor added
 
-To run:
-
-Download and open index.html
+Controls:
+---------
 Movement - W, A, S, D, Up, Down, Left, Right
 Ranged Attack - Left Mouse Button
 Melee Attack - Right Mouse Button

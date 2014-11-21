@@ -1,0 +1,21 @@
+<h1>Listing level_prefabs</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @level_prefabs.each do |level_prefab| %>
+  <tr>
+    <td><%= link_to 'Show', level_prefab %></td>
+    <td><%= link_to 'Edit', edit_level_prefab_path(level_prefab) %></td>
+    <td><%= link_to 'Destroy', level_prefab, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Level prefab', new_level_prefab_path %>
