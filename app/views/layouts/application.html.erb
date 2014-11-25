@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Game</title>
+  <title>Shoot and Slash Game - <%= @title %></title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
+
+<a href="/">Home</a>
+<a href="/level_prefabs">Level Prefab Editor</a>
+<a href="/level">Level Editor</a><br>
 
 <%= yield %>
 

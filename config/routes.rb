@@ -1,15 +1,9 @@
 Game::Application.routes.draw do
-  resources :levels
-
-
-  resources :level_prefabs
-
-
+  
   get "/" => 'mains#index'
-  get "/levelEditor" => "mains#levelEditor"
-
+  resources :levels
+  resources :level_prefabs
   resources :mains
-
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

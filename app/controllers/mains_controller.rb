@@ -10,10 +10,6 @@ class MainsController < ApplicationController
     end
   end
 
-  def levelEditor
-
-  end
-
   # GET /mains/1
   # GET /mains/1.json
   def show

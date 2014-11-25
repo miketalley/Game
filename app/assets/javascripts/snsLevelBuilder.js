@@ -1,11 +1,7 @@
 function snsLevelBuilder(){
 	var self = this,
-		canvasWidth = 800,
-		canvasHeight = 600,
 		previewCanvasWidth = 200,
 		previewCanvasHeight = 200,
-		canvas = $("#c")[0],
-		cc = canvas.getContext("2d"),
 		previewCanvas = $("#preview-canvas")[0],
 		pc = previewCanvas.getContext("2d");
 
@@ -55,17 +51,24 @@ function snsLevelBuilder(){
 
 	self.previewElement = function(){
 		var element = self.previewElementObject();
-		if(element.name && !nameExists(element.name, self.builtElements())){
+		if(element.name && nameExists(element.name, self.builtElements())){
 			message("Name is taken! Please choose another.");
 		}
 		else if(element.name && element.type && element.radius > 0 || (element.width > 0 && element.height > 0)){
 			clearPreviewCanvas();
-			self.builtElements.push(element);
 			buildShapeElement(element);
 		}
 		else{
 			message("Please fill out form completely.");
 		}
+	};
+
+	self.savePrefab = function(model, event, levelPrefabObject){
+		var prefabToSave = levelPrefabObject || self.previewElementObject();
+		self.builtElements.push(prefabToSave);
+		$.post("/level_prefabs", {level_prefab: prefabToSave}, function(response){
+			debugger;
+		});
 	};
 
 	function buildShapeElement(el){
@@ -90,31 +93,21 @@ function snsLevelBuilder(){
 
 	initialize();
 
-
-	self.insertLevelElement = function(){
-		console.log(self.selectedLevelElement());
-	};
-
 	function initialize(){
-		canvas.width = canvasWidth;
-		canvas.height = canvasHeight;
 		previewCanvas.width = previewCanvasWidth;
 		previewCanvas.height = previewCanvasHeight;
 
-		// $.get(fbUrl + "/levels.json", function(response){
-		// 	if(response){
-		// 	}
-		// });
+		$.get("/level_prefabs.json", function(response){
+			if(response & response.length){
+				self.builtElements(response);
+			}
+		});
 	};
 
 	self.clearPreview = function(){
 		clearPreviewCanvas();
 	}
 
-	function clearCanvas(){
-		canvas.height = canvasHeight;
-		canvas.width = canvasWidth;
-	}
 
 	function clearPreviewCanvas(){
 		previewCanvas.height = previewCanvasHeight;
@@ -147,7 +140,6 @@ function snsLevelBuilder(){
 		name = name.toLowerCase();
 
 		for(var i = 0; i < array.length; i++){
-			debugger;
 			if(name === array[i].name.toLowerCase()){
 				exists = true;
 			}

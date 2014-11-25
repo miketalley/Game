@@ -11,7 +11,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141121153006) do
+ActiveRecord::Schema.define(:version => 20141121222046) do
+
+  create_table "level_prefabs", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "levels", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "mains", :force => true do |t|
     t.datetime "created_at", :null => false
