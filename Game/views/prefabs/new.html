@@ -1,0 +1,34 @@
+<div class='row'>
+  <h3>New Prefab</h3>
+</div>
+<div class='row'>
+  <div class='small-12 med-4 large-4 columns'>
+    <div class='row'>
+      <canvas id="preview-canvas"></canvas>
+    </div>
+    <div class='row'>
+      <label>Existing Elements</label>
+      <div class='small-12 large-11 columns'>
+        <select data-bind="options: builtElements, optionsText: function(item){return item.name}, optionsCaption: 'Select Built Element', value: selectedBuiltElement"></select>
+      </div>
+    </div>
+  </div>
+  <div class='small-12 med-8 large-8 columns'>
+    <form data-bind="submit: preview">
+      Name: <input type="text" data-bind="textInput: name"></input>
+      Type: <select data-bind="options: types, value: type"></select>
+      <span data-bind="visible: type() === 'Circle'">Radius: <input type="number" data-bind="value: radius"></input></span>
+      <span data-bind="visible: type() === 'Rectangle'">Width: <input type="number" data-bind="value: ridth"></input></span>
+      <span data-bind="visible: type() === 'Rectangle'">Height: <input type="number" data-bind="value: reight"></input></span>
+      Fill Color: <select data-bind="options: colors, value: dillStyle"></select>
+      Border: <select data-bind="options: widths, value: lineWidth"></select>
+      Border Color: <select data-bind="options: colors, value: strokeStyle"></select>
+      <ul class='inline-list'>
+        <li><button type="submit">Preview Element</button></li>
+    </form>
+        <li><button data-bind="click: savePrefab">Save Prefab</button></li>
+        <li><button data-bind="click: clearPreview">Clear</button></li>
+      </ul>
+    <div id="message-output"></div>
+  </div>
+</div>

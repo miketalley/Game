@@ -2,6 +2,7 @@ requirejs.config({
   paths: {
     // Libraries
     'text': 'js/lib/require/text',
+    'fabric' : 'js/lib/fabric/fabric.require',
     'durandal':'js/lib/durandal/js',
     'plugins' : 'js/lib/durandal/js/plugins',
     'transitions' : 'js/lib/durandal/js/transitions',
