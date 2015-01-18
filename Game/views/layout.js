@@ -9,7 +9,7 @@ define(['plugins/router', 'modal'], function (router) {
       self.router.map([
         { route: '', title:'Home', moduleId: 'views/index', nav: true, hash: '#index' },
         { route:'prefabs/new', title:'New Prefab', moduleId:'views/prefabs/new', nav: true },
-        { route:'play', title:'Play', moduleId:'views/play', nav: true },
+        { route:'play', title:'Play', moduleId:'views/play/index', nav: true },
         // { route: 'instruments/new',     title:'New Instrument',   moduleId:'sections/instruments/new',     nav: true },
         // { route:'sessions', title:'Sessions', moduleId:'sections/sessions/all', nav: true },
         // { route:'sessions/new', title:'New Sessions', moduleId:'sections/sessions/new', nav: true },

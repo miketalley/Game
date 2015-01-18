@@ -18,10 +18,10 @@
       Name: <input type="text" data-bind="textInput: name"></input>
       Type: <select data-bind="options: types, value: type"></select>
       <span data-bind="visible: type() === 'Circle'">Radius: <input type="number" data-bind="value: radius"></input></span>
-      <span data-bind="visible: type() === 'Rectangle'">Width: <input type="number" data-bind="value: ridth"></input></span>
-      <span data-bind="visible: type() === 'Rectangle'">Height: <input type="number" data-bind="value: reight"></input></span>
-      Fill Color: <select data-bind="options: colors, value: dillStyle"></select>
-      Border: <select data-bind="options: widths, value: lineWidth"></select>
+      <span data-bind="visible: type() === 'Rectangle'">Width: <input type="number" data-bind="value: width"></input></span>
+      <span data-bind="visible: type() === 'Rectangle'">Height: <input type="number" data-bind="value: height"></input></span>
+      Fill Color: <select data-bind="options: colors, value: fillStyle"></select>
+      Border Width: <select data-bind="options: widths, value: lineWidth"></select>
       Border Color: <select data-bind="options: colors, value: strokeStyle"></select>
       <ul class='inline-list'>
         <li><button type="submit">Preview Element</button></li>

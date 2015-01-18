@@ -2,9 +2,9 @@ define(['knockout', 'fabric'], function(ko){
 
   function NewPrefab(){
   	var self = this;
-	
+
 	self.previewCanvasWidth = 300;
-	self.previewCanvasHeight = 300;	
+	self.previewCanvasHeight = 300;
 
 	// Builder Constants
 	self.types = ["Rectangle", "Circle"];
@@ -20,10 +20,10 @@ define(['knockout', 'fabric'], function(ko){
 			self.width(null);
 		}
 		else if(type === "Rectangle"){
-			self.Radius(null);
+			self.radius(null);
 		}
 	});
-	self.Radius = ko.observable();
+	self.radius = ko.observable();
 	self.width = ko.observable();
 	self.height = ko.observable();
 	self.fillStyle = ko.observable();
@@ -31,16 +31,24 @@ define(['knockout', 'fabric'], function(ko){
 	self.strokeStyle = ko.observable();
 
 	self.Object = ko.computed(function(){
-		return {
+		var obj = {
 			name: self.name(),
 			type: getType(),
-			radius: self.Radius(),
-			width: self.width(),
-			height: self.height(),
 			fillStyle: self.fillStyle(),
 			lineWidth: self.lineWidth(),
 			strokeStyle: self.strokeStyle()
+		};
+
+		if(self.type() === 'Circle'){
+			obj.radius = self.radius();
 		}
+		else if(self.type() === 'Rectangle'){
+			obj.height = self.height();
+			obj.width = self.width();
+		}
+
+		return obj;
+
 	});
 
 	self.builtElements = ko.observableArray();
@@ -64,7 +72,7 @@ define(['knockout', 'fabric'], function(ko){
 		});
 	};
 
-	self.preview = function(){
+	self.preview = ko.computed(function(){
 		var element = self.Object();
 		if(element.name && nameExists(element.name, self.builtElements())){
 			message("Name is taken! Please choose another.");
@@ -76,7 +84,7 @@ define(['knockout', 'fabric'], function(ko){
 		else{
 			message("Please fill out form completely.");
 		}
-	};
+	});
 
 	self.savePrefab = function(model, event, levelPrefabObject){
 		var prefabToSave = levelPrefabObject || self.Object();
@@ -99,17 +107,19 @@ define(['knockout', 'fabric'], function(ko){
 		else if(el.type === "rect"){
 			pc[el.type](xOffset, yOffset, el.width, el.height);
 		}
+
 		pc.fillStyle = el.fillStyle;
 		pc.fill();
 		pc.lineWidth = el.lineWidth;
 		pc.strokeStyle = el.strokeStyle;
 		pc.stroke();
+
 	};
 
 
 	self.clearPreview = function(){
 		clearPreviewCanvas();
-	}
+	};
 
 
 	function clearPreviewCanvas(){
@@ -134,7 +144,7 @@ define(['knockout', 'fabric'], function(ko){
 	function message(text){
 		$("#message-output").text(text);
 		setTimeout(function(){
-			$("#message-output").text();	
+			$("#message-output").text();
 		}, 2000);
 	}
 

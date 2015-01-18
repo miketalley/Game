@@ -15,7 +15,10 @@ requirejs.config({
     'dropzone': 'js/lib/dropzone/dropzone-amd-module',
 
     // Modules
-    'math' : 'js/modules/math',
+    'gameMath' : 'js/modules/gameMath',
+    'gameVariables': 'js/modules/gameVariables',
+    'level': 'js/modules/level',
+    'player': 'js/modules/player'
 
     },
     shim: {
