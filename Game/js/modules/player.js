@@ -51,8 +51,8 @@
     };
 
     var groupDefaults = {
-      left: canvas.width / 2,
-      top: canvas.height / 2,
+      left: this.xPos,
+      top: this.yPos,
       originX: "center",
       originY: "center",
       angle: 0,
@@ -154,20 +154,20 @@
         var angleStart = this.el.angle;
         var that = this;
         var turnIntervalID = setInterval(function(){
-          turn(that);
+          turn(that, angleStart, turnIntervalID);
         }, 8);
         faceCursorEnabled = false;
       }
     };
 
-    function turn(that){
+    function turn(that, angleStart, interval){
       if(angleStart - that.el.angle < 360){
         that.el.angle -= 12;
       }
       else{
         that.el.angle = angleStart;
         that.el.remove(that.blade);
-        clearInterval(turnIntervalID);
+        clearInterval(interval);
         faceCursorEnabled = true;
       }
     }
@@ -183,7 +183,7 @@
       if(this.yPos > minY && this.xPos > minX){
         this.xPos -= distance || defaultDiagonalMoveLeftDistance;
         this.yPos -= distance || defaultDiagonalMoveUpDistance;
-        movePlayer();
+        // movePlayer(this);
       }
       else if(this.yPos > minY){
         this.moveUp();
@@ -197,7 +197,7 @@
       if(this.yPos > minY && this.xPos < maxX){
         this.xPos += distance || defaultDiagonalMoveRightDistance;
         this.yPos -= distance || defaultDiagonalMoveUpDistance;
-        movePlayer();
+        // movePlayer(this);
       }
       else if(this.yPos > minY){
         this.moveUp();
@@ -211,7 +211,7 @@
       if(this.yPos < maxY && this.xPos > minX){
         this.xPos -= distance || defaultDiagonalMoveLeftDistance;
         this.yPos += distance || defaultDiagonalMoveDownDistance;
-        movePlayer();
+        // movePlayer(this);
       }
       else if(this.yPos < maxY){
         this.moveDown();
@@ -225,7 +225,7 @@
       if(this.yPos < maxY && this.xPos < maxX){
         this.xPos += distance || defaultDiagonalMoveRightDistance;
         this.yPos += distance || defaultDiagonalMoveDownDistance;
-        movePlayer();
+        // movePlayer(this);
       }
       else if(this.yPos < maxY){
         this.moveDown();
@@ -238,28 +238,28 @@
     this.moveUp = function(distance){
       if(this.yPos > minY){
         this.yPos -= distance || defaultMoveUpDistance;
-        movePlayer();
+        // movePlayer(this);
       }
     };
 
     this.moveDown = function(distance){
       if(this.yPos < maxY){
         this.yPos += distance || defaultMoveDownDistance;
-        movePlayer();
+        // movePlayer(this);
       }
     };
 
     this.moveLeft = function(distance){
       if(this.xPos > minX){
         this.xPos -= distance || defaultMoveLeftDistance;
-        movePlayer();
+        // movePlayer(this);
       }
     };
 
     this.moveRight = function(distance){
       if(this.xPos < maxX){
         this.xPos += distance || defaultMoveRightDistance;
-        movePlayer();
+        // movePlayer(this);
       }
     };
 
@@ -299,10 +299,10 @@
       }
     };
 
-    function movePlayer(){
-      this.el.left = p1.xPos;
-      this.el.top = p1.yPos;
-    }
+    // function movePlayer(player){
+    //   player.el.left = player.xPos;
+    //   player.el.top = player.yPos;
+    // }
   }
 
   return Player;

@@ -55,7 +55,6 @@
 			var top = object.top - buffer;
 			var bottom = object.top + object.currentHeight + buffer;
 			if((x < right && x > left) && (y < bottom && y > top)){
-				console.log(object);
 				return object;
 			}
 			else{
