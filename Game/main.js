@@ -18,7 +18,8 @@ requirejs.config({
     'gameMath' : 'js/modules/gameMath',
     'gameVariables': 'js/modules/gameVariables',
     'level': 'js/modules/level',
-    'player': 'js/modules/player'
+    'player': 'js/modules/player',
+    'bullet': 'js/modules/bullet'
 
     },
     shim: {

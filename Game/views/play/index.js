@@ -3,6 +3,9 @@ define(['jquery', 'gameMath', 'fabric', 'level', 'player'], function ($, gmath, 
   function Play(){
     var self = this;
 
+    var canvas;
+    window.canvas = canvas;
+
     var canvasWidth = 800;
     var canvasHeight = 600;
     var playerSprites = [];
@@ -12,10 +15,10 @@ define(['jquery', 'gameMath', 'fabric', 'level', 'player'], function ($, gmath, 
 
 
     self.attached = function(){
-      var canvas = new fabric.Canvas("c", { height: canvasHeight, width: canvasWidth, selection: false });
+      canvas = new fabric.Canvas("c", { height: canvasHeight, width: canvasWidth, selection: false });
       gmath.setCanvas(canvas);
 
-      p1 = new Player();
+      p1 = new Player(canvas);
       playerSprites.push(p1);
       canvas.add(playerSprites[0].el);
       $(document).mousemove(function(e){
@@ -96,70 +99,6 @@ define(['jquery', 'gameMath', 'fabric', 'level', 'player'], function ($, gmath, 
         p1.moveRight();
       }
     }
-
-    function bullet(clickEvent, player, bulletType){
-      var angle = degToRad(player.el.angle + 90);
-      var bulletSettings, yOffset, xOffset, slope;
-      var bulletDefaults = {
-          radius: 1.5,
-          fill: "black",
-          left: player.el.left + (32 * Math.cos(angle)),
-          top: player.el.top + (32 * Math.sin(angle)),
-          originX: 'center',
-          originY: 'center',
-          selectable: false
-        };
-
-      // Set up view elements
-      if(bulletType){
-        // Add various bulletSettings attributes here
-      }
-      var slug = new fabric.Circle(bulletSettings || bulletDefaults);
-      bullets.push(slug);
-
-      // Run calculations on bullet trajectory
-      if(player.el.angle !== 90 && player.el.angle !== 180){
-        slope = Math.tan(angle);
-      }
-      calculateSlopeOffsets();
-
-      // Main bullet calls
-      fire();
-      var moveIntervalID = setInterval(move, 10);
-
-      function fire(){
-        if(!hasHitObject(slug.left, slug.top)){
-          canvas.add(slug);
-        }
-      }
-
-      function move(){
-        slug.top = slug.top + yOffset;
-        slug.left = slug.left + xOffset;
-
-        if(!isOnScreen(slug.left, slug.top) || hasHitObject(slug.left, slug.top, p1)){
-          clearInterval(moveIntervalID);
-          slug.remove();
-        }
-      }
-
-      function calculateSlopeOffsets(){
-        var x1 = clickEvent.clientX;
-        var y1 = clickEvent.clientY;
-        var x = slug.left;
-        var y = slug.top;
-        var deltaX = x1 - x;
-        var deltaY = y1 - y;
-        var magnitude;
-
-        magnitude = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
-
-        yOffset = (deltaY / magnitude) * 3;
-        xOffset = (deltaX / magnitude) * 3;
-      }
-    }
-
-
 
     function drawSprites(){
       for(x in playerSprites){

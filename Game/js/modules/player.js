@@ -1,14 +1,14 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['fabric'], factory);
+        define(['fabric', 'bullet'], factory);
     } else {
         // Browser globals
         root.player = factory(root.fabric);
     }
-}(this, function (fabric, canvasWidth, canvasHeight) {
+}(this, function (fabric, Bullet) {
 
-  function Player(){
+  function Player(canvas){
     var diagonalModifier = 0.57;
     var defaultMoveDistance = 5;
     var defaultMoveUpDistance = 5;
@@ -22,8 +22,14 @@
     var defaultDiagonalMoveDistance = defaultMoveDistance * diagonalModifier;
     // var faceCursorEnabled = true;
 
-    this.xPos = canvasWidth / 2;
-    this.yPos = canvasHeight / 2;
+    // TODO -- get these from window
+    var minY = 9;
+    var minX = 9;
+    var maxY = 591;
+    var maxX = 791;
+
+    this.xPos = canvas.width / 2;
+    this.yPos = canvas.height / 2;
 
     var torsoDefaults = {
       fill: 'blue',
@@ -45,8 +51,8 @@
     };
 
     var groupDefaults = {
-      left: canvasWidth / 2,
-      top: canvasHeight / 2,
+      left: canvas.width / 2,
+      top: canvas.height / 2,
       originX: "center",
       originY: "center",
       angle: 0,
@@ -170,7 +176,7 @@
       if(!this.el.contains(this.gun)){
         this.el.add(this.gun);
       }
-      var slug = new bullet(clickEvent, this);
+      var slug = new Bullet(canvas, clickEvent, this);
     };
 
     this.moveUpAndLeft = function(distance){
