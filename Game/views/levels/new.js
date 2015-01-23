@@ -1,7 +1,10 @@
 define(['knockout', 'fabric'], function(ko){
 
-  function NewPrefab(){
+  function NewLevel(){
   	var self = this;
+
+  	self.previewLevelWidth = 800;
+  	self.previewLevelHeight = 600;
 
 	self.previewCanvasWidth = 300;
 	self.previewCanvasHeight = 300;
@@ -29,8 +32,6 @@ define(['knockout', 'fabric'], function(ko){
 	self.fillStyle = ko.observable();
 	self.lineWidth = ko.observable();
 	self.strokeStyle = ko.observable();
-	self.destructible = ko.observable();
-	self.health = ko.observable();
 
 	self.prefabObject = ko.computed(function(){
 		var obj = {
@@ -38,10 +39,7 @@ define(['knockout', 'fabric'], function(ko){
 			type: getType(),
 			fillStyle: self.fillStyle(),
 			lineWidth: self.lineWidth(),
-			strokeStyle: self.strokeStyle(),
-			destructible: self.destructible(),
-			health: self.health()
-
+			strokeStyle: self.strokeStyle()
 		};
 
 		if(self.type() === 'Circle'){
@@ -64,8 +62,14 @@ define(['knockout', 'fabric'], function(ko){
 	});
 
 	self.attached = function(){
+		self.levelCanvas = $("#level-canvas")[0];
 		self.previewCanvas = $("#preview-canvas")[0];
+
+		pl = self.levelCanvas.getContext("2d");
 		pc = self.previewCanvas.getContext("2d");
+
+		self.levelCanvas.width = self.previewLevelWidth;
+		self.levelCanvas.height = self.previewLevelHeight;
 
 		self.previewCanvas.width = self.previewCanvasWidth;
 		self.previewCanvas.height = self.previewCanvasHeight;
@@ -163,6 +167,6 @@ define(['knockout', 'fabric'], function(ko){
 	}
   }
 
-  return NewPrefab;
+  return NewLevel;
 
 });

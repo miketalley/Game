@@ -2,9 +2,9 @@ body {
 	overflow: hidden;
 }
 
-#c {
+#c, #level-canvas {
 	padding: 0;
-	margin: 0;
+	margin: 5px;
 	border: 1px solid black;
 }
 
@@ -33,4 +33,11 @@ body {
 	margin: 5px;
 	display: block;
 	width: 100%;
+}
+
+.fullWidth {
+   width: 99% !important;
+   margin-left: auto !important;
+   margin-right: auto !important;
+   max-width: initial !important;
 }

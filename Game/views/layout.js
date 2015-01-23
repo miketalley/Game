@@ -8,8 +8,9 @@ define(['plugins/router', 'modal'], function (router) {
     self.activate = function(){
       self.router.map([
         { route: '', title:'Home', moduleId: 'views/index', nav: true, hash: '#index' },
-        { route:'prefabs/new', title:'New Prefab', moduleId:'views/prefabs/new', nav: true },
-        { route:'play', title:'Play', moduleId:'views/play/index', nav: true },
+        { route:'play', title:'Play', moduleId:'views/play/index', nav: true, hash: '#play' },
+        { route:'levels/new', title:'New Level', moduleId:'views/levels/new', nav: true, hash: '#levels/new' },
+        { route:'prefabs/new', title:'New Prefab', moduleId:'views/prefabs/new', nav: true, hash: '#prefabs/new' },
         // { route: 'instruments/new',     title:'New Instrument',   moduleId:'sections/instruments/new',     nav: true },
         // { route:'sessions', title:'Sessions', moduleId:'sections/sessions/all', nav: true },
         // { route:'sessions/new', title:'New Sessions', moduleId:'sections/sessions/new', nav: true },
