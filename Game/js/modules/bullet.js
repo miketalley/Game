@@ -32,9 +32,11 @@
 
       if(gmath.isOnScreen(bullet.left, bullet.top)){
         var hitObject = gmath.hasHitObject(bullet.left, bullet.top);
-        if(hitObject.destroyable){
+        if(hitObject){
+          if(hitObject.destroyable){
+            this.damageObject(hitObject, bullet);
+          }
           bullet.remove();
-          this.damageObject(hitObject, bullet);
         }
       } 
       else{
