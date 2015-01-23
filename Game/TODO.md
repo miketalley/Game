@@ -1,0 +1,11 @@
+- Add links to buttons on homepage
+- Add sword damage to objects
+- Update level editor to get prefab json dummy data
+- Add insert prefab into level on level editor
+- Ability to save level(room)
+- Ability to add more rooms to create an actual level
+- Get levels to load into the game
+- Back end for saving prefabs/levels
+
+- Monsters!
+- Death animations for destroyed objects
