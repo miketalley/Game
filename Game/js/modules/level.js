@@ -49,8 +49,14 @@
 		left: 500,
 		top: 400,
 		selectable: false,
-		destroyable: true
+		destroyable: true,
+		health: 200,
+		die: function(){ console.log(arguments) }
 	});
+
+	function explode(){
+		debugger;
+	}
 
 	this.loadLevel = function(canvas){
 		canvas.add(column_small);

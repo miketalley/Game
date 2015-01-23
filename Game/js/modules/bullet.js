@@ -18,8 +18,11 @@
           top: player.el.top + (32 * Math.sin(angle)),
           originX: 'center',
           originY: 'center',
-          selectable: false
+          selectable: false,
+          damage: 50
         };
+
+    this.isApplyingDamage = false;
 
     this.moveBullet = function(){
       var bullet = this.slug;
@@ -27,8 +30,34 @@
       bullet.top = bullet.top + this.offsets.y;
       bullet.left = bullet.left + this.offsets.x;
 
-      if(!gmath.isOnScreen(bullet.left, bullet.top) || gmath.hasHitObject(bullet.left, bullet.top)){
+      if(gmath.isOnScreen(bullet.left, bullet.top)){
+        var hitObject = gmath.hasHitObject(bullet.left, bullet.top);
+        if(hitObject.destroyable){
+          bullet.remove();
+          this.damageObject(hitObject, bullet);
+        }
+      } 
+      else{
         bullet.remove();
+      }
+    };
+
+    this.damageObject = function(objectToDamage, damagingObject){
+      if(!this.isApplyingDamage){
+        this.isApplyingDamage = true;
+        console.log('Before Health: ', objectToDamage.health);
+        objectToDamage.health -= damagingObject.damage;
+        console.log('After Health: ', objectToDamage.health);
+        if(objectToDamage.health <= 0){
+          objectToDamage.remove();
+          // Play sound
+          return true;
+        }
+        else{
+          return false;
+          // Play indestructible sound
+        }
+        this.isApplyingDamage = false;
       }
     };
 
@@ -46,12 +75,8 @@
 
     this.offsets = gmath.calculateSlopeOffsets(clickEvent, this.slug);
 
-    // function fire(){
-      if(!gmath.hasHitObject(this.slug.left, this.slug.top)){
-        canvas.add(this.slug);
-      }
-    // }
-
+    var hitObject = gmath.hasHitObject(this.slug.left, this.slug.top);
+    hitObject ? this.addDamage(hitObject) : canvas.add(this.slug);
 
   }    
 

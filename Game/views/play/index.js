@@ -36,7 +36,7 @@ define(['jquery', 'gameMath', 'fabric', 'level', 'player', 'bullet'], function (
       $(window).on('keydown', handleKeyDown);
       $(window).on('keyup', handleKeyUp);
 
-      var checkKeysID = setInterval(checkKeys.bind(p1), 25);
+      var checkKeysID = setInterval(checkKeys.bind(p1), 55);
       level.loadLevel(canvas);
       window.requestAnimationFrame(gameLoop);
     };
