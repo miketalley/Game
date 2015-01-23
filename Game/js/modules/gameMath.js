@@ -46,21 +46,22 @@
 
 	// Returns false or the object hit
 	this.hasHitObject = function(x, y, bufferZone, player){
-		var objectsList = canvas.getObjects();
-		var buffer = bufferZone || 0;
-		for(var i = 0; i < objectsList.length; i++){
+		var objectsList = canvas.getObjects(),		
+			buffer = bufferZone || 0,
+			hitObject = false;
+		
+		for(var i = 1; i < objectsList.length; i++){
 			var object = objectsList[i];
 			var left = object.left - buffer;
 			var right = object.left + object.currentWidth + buffer;
 			var top = object.top - buffer;
 			var bottom = object.top + object.currentHeight + buffer;
 			if((x < right && x > left) && (y < bottom && y > top)){
-				return object;
-			}
-			else{
-				return false;
+				hitObject = object;
 			}
 		}
+
+		return hitObject;
 	};
 
 	this.checkCollisionDirection = function(x, y, objectHit){

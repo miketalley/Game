@@ -1,12 +1,12 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['fabric', 'bullet'], factory);
+        define(['fabric', 'bullet', 'gameMath'], factory);
     } else {
         // Browser globals
         root.player = factory(root.fabric);
     }
-}(this, function (fabric, Bullet) {
+}(this, function (fabric, Bullet, gmath) {
 
   function Player(canvas){
     var diagonalModifier = 0.57;
@@ -264,11 +264,11 @@
     };
 
     this.checkCollision = function(){
-      var objectHit = hasHitObject(this.xPos, this.yPos, 7);
+      var objectHit = gmath.hasHitObject(this.xPos, this.yPos, 7);
       var direction;
 
       if(objectHit){
-        direction = checkCollisionDirection(this.xPos, this.yPos, objectHit);
+        direction = gmath.checkCollisionDirection(this.xPos, this.yPos, objectHit);
       }
       else{
         defaultMoveUpDistance = defaultMoveDistance;
