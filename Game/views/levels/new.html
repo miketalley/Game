@@ -14,20 +14,18 @@
     </div>
   </div>
   <div class='small-12 med-5 large-5 columns'>
-      <canvas id="preview-canvas"></canvas>
-      <div class='small-12 large-11 columns'>
-        <select data-bind="options: builtElements, optionsText: function(item){return item.name}, optionsCaption: 'Select Built Element', value: selectedBuiltElement"></select>
+      <div class='row'>
+        <div class='small-12 large-12 columns'>
+          Select Prefab to Insert: <select data-bind="options: builtElements, optionsText: function(item){return item.name}, optionsCaption: 'Select Built Element', value: selectedBuiltElement"></select>
+        </div>
       </div>
-      Name: <input type="text" data-bind="textInput: name"></input>
-      Type: <select data-bind="options: types, value: type"></select>
-      <span data-bind="visible: type() === 'Circle'">Radius: <input type="number" data-bind="value: radius"></input></span>
-      <span data-bind="visible: type() === 'Rectangle'">Width: <input type="number" data-bind="value: width"></input></span>
-      <span data-bind="visible: type() === 'Rectangle'">Height: <input type="number" data-bind="value: height"></input></span>
-      Fill Color: <select data-bind="options: colors, value: fillStyle"></select>
-      Border Width: <select data-bind="options: widths, value: lineWidth"></select>
-      Border Color: <select data-bind="options: colors, value: strokeStyle"></select>
+      <div class='row'>
+        <div class='small-12 med-6-offset-3 large-6-offset-3 columns'>
+          <canvas id="preview-canvas"></canvas>
+        </div>
+      </div>
       <ul class='inline-list'>
-        <li><button data-bind="click: savePrefab">Save Prefab</button></li>
+        <li><button data-bind="click: savePrefab">Insert Prefab</button></li>
         <li><button data-bind="click: clearPreview">Clear</button></li>
       </ul>
     <div id="message-output"></div>
