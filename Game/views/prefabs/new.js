@@ -8,8 +8,8 @@ define(['knockout', 'fabric'], function(ko){
 
 	// Builder Constants
 	self.types = ["Rectangle", "Circle"];
-	self.colors = ["red", "blue", "yellow", "green", "purple", "orange"];
-	self.widths = [0, 1, 2, 3, 4, 5];
+	self.widths = [1, 2, 3, 4, 5];
+	self.colors = ["red", "blue", "yellow", "green", "purple", "orange", "black"];
 
 	// Element Builder
 	self.name = ko.observable();
@@ -30,7 +30,7 @@ define(['knockout', 'fabric'], function(ko){
 	self.lineWidth = ko.observable();
 	self.strokeStyle = ko.observable();
 
-	self.Object = ko.computed(function(){
+	self.prefabObject = ko.computed(function(){
 		var obj = {
 			name: self.name(),
 			type: getType(),
@@ -65,15 +65,16 @@ define(['knockout', 'fabric'], function(ko){
 		self.previewCanvas.width = self.previewCanvasWidth;
 		self.previewCanvas.height = self.previewCanvasHeight;
 
-		$.get("/level_prefabs.json", function(response){
-			if(response & response.length){
-				self.builtElements(response);
-			}
-		});
+		// TODO Setup backend for getting saved prefabs
+		// $.get("/level_prefabs.json", function(response){
+		// 	if(response & response.length){
+		// 		self.builtElements(response);
+		// 	}
+		// });
 	};
 
 	self.preview = ko.computed(function(){
-		var element = self.Object();
+		var element = self.prefabObject();
 		if(element.name && nameExists(element.name, self.builtElements())){
 			message("Name is taken! Please choose another.");
 		}
@@ -81,17 +82,18 @@ define(['knockout', 'fabric'], function(ko){
 			clearPreviewCanvas();
 			buildShapeElement(element);
 		}
-		else{
-			message("Please fill out form completely.");
-		}
 	});
 
 	self.savePrefab = function(model, event, levelPrefabObject){
-		var prefabToSave = levelPrefabObject || self.Object();
+		var prefabToSave = levelPrefabObject || self.prefabObject();
 		self.builtElements.push(prefabToSave);
-		$.post("/level_prefabs", {level_prefab: prefabToSave}, function(response){
-			debugger;
-		});
+
+		console.log(prefabToSave, ' saved successfully!');
+		
+		// TODO Set up back end post for saving prefab
+		// $.post("/level_prefabs", {level_prefab: prefabToSave}, function(response){
+		// 	debugger;
+		// });
 	};
 
 	function buildShapeElement(el){
@@ -125,8 +127,6 @@ define(['knockout', 'fabric'], function(ko){
 	function clearPreviewCanvas(){
 		self.previewCanvas.height = self.previewCanvasHeight;
 		self.previewCanvas.width = self.previewCanvasWidth;
-		// Doesn't clear lines
-		// pc.clearRect(0, 0, self.previewCanvasWidth, self.previewCanvasHeight);
 	}
 
 	// Converts human readable element type to key

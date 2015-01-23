@@ -39,6 +39,10 @@ define(function (require) {
   ko.punches.enableAll();
   ko.punches.attributeInterpolationMarkup.enable();
 
+  // Set window variables
+  window.ko = ko;
+  window.app = app;
+
   system.debug(true);
 
   app.title = 'Game';

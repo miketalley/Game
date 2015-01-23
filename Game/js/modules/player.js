@@ -183,7 +183,7 @@
       if(this.yPos > minY && this.xPos > minX){
         this.xPos -= distance || defaultDiagonalMoveLeftDistance;
         this.yPos -= distance || defaultDiagonalMoveUpDistance;
-        // movePlayer(this);
+        movePlayer(this);
       }
       else if(this.yPos > minY){
         this.moveUp();
@@ -197,7 +197,7 @@
       if(this.yPos > minY && this.xPos < maxX){
         this.xPos += distance || defaultDiagonalMoveRightDistance;
         this.yPos -= distance || defaultDiagonalMoveUpDistance;
-        // movePlayer(this);
+        movePlayer(this);
       }
       else if(this.yPos > minY){
         this.moveUp();
@@ -211,7 +211,7 @@
       if(this.yPos < maxY && this.xPos > minX){
         this.xPos -= distance || defaultDiagonalMoveLeftDistance;
         this.yPos += distance || defaultDiagonalMoveDownDistance;
-        // movePlayer(this);
+        movePlayer(this);
       }
       else if(this.yPos < maxY){
         this.moveDown();
@@ -225,7 +225,7 @@
       if(this.yPos < maxY && this.xPos < maxX){
         this.xPos += distance || defaultDiagonalMoveRightDistance;
         this.yPos += distance || defaultDiagonalMoveDownDistance;
-        // movePlayer(this);
+        movePlayer(this);
       }
       else if(this.yPos < maxY){
         this.moveDown();
@@ -238,28 +238,28 @@
     this.moveUp = function(distance){
       if(this.yPos > minY){
         this.yPos -= distance || defaultMoveUpDistance;
-        // movePlayer(this);
+        movePlayer(this);
       }
     };
 
     this.moveDown = function(distance){
       if(this.yPos < maxY){
         this.yPos += distance || defaultMoveDownDistance;
-        // movePlayer(this);
+        movePlayer(this);
       }
     };
 
     this.moveLeft = function(distance){
       if(this.xPos > minX){
         this.xPos -= distance || defaultMoveLeftDistance;
-        // movePlayer(this);
+        movePlayer(this);
       }
     };
 
     this.moveRight = function(distance){
       if(this.xPos < maxX){
         this.xPos += distance || defaultMoveRightDistance;
-        // movePlayer(this);
+        movePlayer(this);
       }
     };
 
@@ -299,10 +299,10 @@
       }
     };
 
-    // function movePlayer(player){
-    //   player.el.left = player.xPos;
-    //   player.el.top = player.yPos;
-    // }
+    function movePlayer(player){
+      player.el.left = player.xPos;
+      player.el.top = player.yPos;
+    }
   }
 
   return Player;
