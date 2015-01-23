@@ -39,9 +39,8 @@ define(['knockout', 'fabric'], function(ko){
 			fillStyle: self.fillStyle(),
 			lineWidth: self.lineWidth(),
 			strokeStyle: self.strokeStyle(),
-			destructible: self.destructible(),
-			health: self.health()
-
+			destructible: self.destructible() || false,
+			health: self.destructible() ? (self.health() || 1) : null;
 		};
 
 		if(self.type() === 'Circle'){
