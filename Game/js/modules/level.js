@@ -12,12 +12,11 @@
 
 	};
 
-	var R = {
-		column_small: {
-			x: 100,
-			y: 100
-		}
-	};
+	var rooms = {
+		1: [column_small, column_small_destroyable]
+	}
+
+	var R = 0;
 
 	var testLevel = [
 		R, R, R,
@@ -50,15 +49,14 @@
 		top: 400,
 		selectable: false,
 		destroyable: true,
-		health: 200,
-		die: function(){ console.log(arguments) }
+		health: 200
 	});
 
 	function explode(){
-		debugger;
+		// Example death animation for objects
 	}
 
-	this.loadLevel = function(canvas){
+	this.loadLevel = function(canvas, level){
 		canvas.add(column_small);
 		canvas.add(column_small_destroyable);
 	};
