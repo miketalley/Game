@@ -84,6 +84,25 @@
 		}
 	};
 
+	this.calculateSlopeOffsets = function(clickEvent, slug){
+	    var x1 = clickEvent.clientX;
+	    var y1 = clickEvent.clientY;
+	    var x = slug.left;
+	    var y = slug.top;
+	    var deltaX = x1 - x;
+	    var deltaY = y1 - y;
+	    var magnitude,
+	        xOffset,
+	        yOffset;
+
+	    magnitude = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
+
+	    yOffset = (deltaY / magnitude) * 3;
+	    xOffset = (deltaX / magnitude) * 3;
+
+	    return { y: yOffset, x: xOffset };
+  	};
+
 	return this;
 
 }));

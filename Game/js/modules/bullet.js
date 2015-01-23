@@ -9,11 +9,9 @@
 }(this, function (gmath, fabric) {
 
   function Bullet(canvas, clickEvent, player, bulletType){
-      var bullets = [];
-
-      var angle = degToRad(player.el.angle + 90);
-      var bulletSettings, yOffset, xOffset, slope;
-      var bulletDefaults = {
+    var angle = degToRad(player.el.angle + 90),
+        bulletSettings,
+        bulletDefaults = {
           radius: 1.5,
           fill: "black",
           left: player.el.left + (32 * Math.cos(angle)),
@@ -23,55 +21,40 @@
           selectable: false
         };
 
-      // Set up view elements
-      if(bulletType){
-        // Add various bulletSettings attributes here
+    this.moveBullet = function(){
+      var bullet = this.slug;
+
+      bullet.top = bullet.top + this.offsets.y;
+      bullet.left = bullet.left + this.offsets.x;
+
+      if(!gmath.isOnScreen(bullet.left, bullet.top) || gmath.hasHitObject(bullet.left, bullet.top)){
+        bullet.remove();
       }
-      var slug = new fabric.Circle(bulletSettings || bulletDefaults);
-      bullets.push(slug);
+    };
 
-      // Run calculations on bullet trajectory
-      if(player.el.angle !== 90 && player.el.angle !== 180){
-        slope = Math.tan(angle);
-      }
-      calculateSlopeOffsets();
-
-      // Main bullet calls
-      fire();
-      var moveIntervalID = setInterval(move, 10);
-
-      function fire(){
-        if(!gmath.hasHitObject(slug.left, slug.top)){
-          canvas.add(slug);
-        }
-      }
-
-      function move(){
-        slug.top = slug.top + yOffset;
-        slug.left = slug.left + xOffset;
-
-        if(!gmath.isOnScreen(slug.left, slug.top) || gmath.hasHitObject(slug.left, slug.top, player)){
-          clearInterval(moveIntervalID);
-          slug.remove();
-        }
-      }
-
-      function calculateSlopeOffsets(){
-        var x1 = clickEvent.clientX;
-        var y1 = clickEvent.clientY;
-        var x = slug.left;
-        var y = slug.top;
-        var deltaX = x1 - x;
-        var deltaY = y1 - y;
-        var magnitude;
-
-        magnitude = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
-
-        yOffset = (deltaY / magnitude) * 3;
-        xOffset = (deltaX / magnitude) * 3;
-      }
+    // Set up view elements
+    if(bulletType){
+      // Add various bulletSettings attributes here
     }
 
-    return Bullet;
+    this.slug = new fabric.Circle(bulletSettings || bulletDefaults);
+
+    // Run calculations on bullet trajectory
+    // if(player.el.angle !== 90 && player.el.angle !== 180){
+    //   this.slope = Math.tan(angle);
+    // }
+
+    this.offsets = gmath.calculateSlopeOffsets(clickEvent, this.slug);
+
+    // function fire(){
+      if(!gmath.hasHitObject(this.slug.left, this.slug.top)){
+        canvas.add(this.slug);
+      }
+    // }
+
+
+  }    
+
+  return Bullet;
 
 }));

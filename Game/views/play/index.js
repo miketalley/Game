@@ -1,4 +1,4 @@
-define(['jquery', 'gameMath', 'fabric', 'level', 'player'], function ($, gmath, fabric, level, Player) {
+define(['jquery', 'gameMath', 'fabric', 'level', 'player', 'bullet'], function ($, gmath, fabric, level, Player, Bullet) {
 
   function Play(){
     var self = this;
@@ -46,7 +46,7 @@ define(['jquery', 'gameMath', 'fabric', 'level', 'player'], function ($, gmath, 
 
       // Update Values
       p1.checkCollision();
-      // checkBulletCollision();
+      p1.updateBullets();
 
       // Draw Game
       canvas.renderAll();

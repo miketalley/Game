@@ -28,8 +28,11 @@
     var maxY = 591;
     var maxX = 791;
 
+    var bullet;
+
     this.xPos = canvas.width / 2;
     this.yPos = canvas.height / 2;
+    this.bullets = [];
 
     var torsoDefaults = {
       fill: 'blue',
@@ -176,7 +179,15 @@
       if(!this.el.contains(this.gun)){
         this.el.add(this.gun);
       }
-      var slug = new Bullet(canvas, clickEvent, this);
+      bullet = new Bullet(canvas, clickEvent, this);
+
+      this.bullets.push(bullet);
+    };
+
+    this.updateBullets = function(){
+      for(var i = 0; i < this.bullets.length; i++){
+        this.bullets[i].moveBullet();
+      }
     };
 
     this.moveUpAndLeft = function(distance){
