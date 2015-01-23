@@ -33,9 +33,9 @@
     };
 
     // Set up view elements
-    if(bulletType){
-      // Add various bulletSettings attributes here
-    }
+    // if(bulletType){
+    //   // Add various bulletSettings attributes here
+    // }
 
     this.slug = new fabric.Circle(bulletSettings || bulletDefaults);
 
